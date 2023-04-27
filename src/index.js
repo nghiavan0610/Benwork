@@ -11,13 +11,6 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('yamljs');
 
-// const http = require('http');
-// const socket = require('./eventHandler/socket');
-// const server = http.createServer(app);
-
-// Initialize the socket.io server
-// socket.initSocket(server);
-
 app.use(cors());
 
 // HTTP logger
@@ -57,7 +50,3 @@ route(app);
 app.listen(config.NODE_DOCKER_PORT || 3000, () => {
     console.log(`App listening on port ${config.NODE_DOCKER_PORT || 3000}`);
 });
-
-// server.listen(config.SOCKET_PORT || 3001, () => {
-//     console.log(`Socket server listening on port ${config.SOCKET_PORT || 3001}`);
-// });

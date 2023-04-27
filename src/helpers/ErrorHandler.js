@@ -1,4 +1,4 @@
-const config = require('../config/env');
+const config = require('../configs/env');
 
 class ApiError extends Error {
     constructor(statusCode, message) {

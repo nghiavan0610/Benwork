@@ -35,7 +35,7 @@ const fbOptions = {
 const fbLogin = new FacebookStrategy(fbOptions, async (accessToken, refreshToken, profile, cb) => {
     try {
         const [user, created] = await User.findOrCreate({
-            where: { facebook_id: profile.id },
+            where: { facebookId: profile.id },
             defaults: {
                 name: profile.displayName,
             },
@@ -56,7 +56,7 @@ const ggOptions = {
 const ggLogin = new GoogleStrategy(ggOptions, async (accessToken, refreshToken, profile, cb) => {
     try {
         const [user, created] = await User.findOrCreate({
-            where: { google_id: profile.id },
+            where: { googleId: profile.id },
             defaults: {
                 name: profile.displayName,
             },

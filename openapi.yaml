@@ -1,3042 +1,3042 @@
 openapi: 3.0.0
 info:
-  title: fiverr
-  contact: {}
-  version: '1.0'
+    title: fiverr
+    contact: {}
+    version: '1.0'
 servers:
-  - url: '{baseUrl}/api'
-    variables:
-      baseUrl:
-        default: https://fiverr.cyclic.app
+    - url: '{baseUrl}/api'
+      variables:
+          baseUrl:
+              default: https://fiverr.cyclic.app
 
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT 
-      
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
 paths:
-  /auth/signin:
-    post:
-      tags:
-        - Auth
-      summary: Sign In
-      description: |-
-        Acc user: user\[2-10\]@gmail.com / p@ssword
+    /auth/signin:
+        post:
+            tags:
+                - Auth
+            summary: Sign In
+            description: |-
+                Acc user: user\[2-10\]@gmail.com / p@ssword
 
-        Acc admin: admin@gmail.com / p@ssword
+                Acc admin: admin@gmail.com / p@ssword
 
-        Acc seller: user\[11-25\]@gmail.com / p@ssword
-      operationId: SignIn
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - email
-                - password
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: '{Required}'
-                  example: admin@gmail.com
-                password:
-                  type: string
-                  description: '{Required}'
-                  example: p@ssword
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-      security: []
-  /auth/facebook/signin:
-    get:
-      tags:
-        - Auth
-      summary: Facebook Sign In (Copy link to your web browser to test)
-      operationId: FacebookSignIn
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-      security: []
-  /auth/google/signin:
-    get:
-      tags:
-        - Auth
-      summary: Google Sign In (Copy link to your web browser to test)
-      operationId: GoogleSignIn
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-      security: []
-  /auth/signup:
-    post:
-      tags:
-        - Auth
-      summary: Sign Up
-      operationId: SignUp
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - email
-                - password
-                - birthday
-                - gender
-                - phone
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required} user name'
-                  example: test
-                email:
-                  type: string
-                  description: '{Required}'
-                  example: test@gmail.com
-                password:
-                  type: string
-                  description: '{Required}'
-                  example: p@ssword
-                birthday:
-                  type: string
-                  description: '{Optional}'
-                gender:
-                  type: string
-                  description: '{Optional} male - female - other'
-                phone:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /auth/account:
-    get:
-      tags:
-        - Auth
-      summary: Get Account Navbar
-      operationId: GetAccountNavbar
-      parameters: []
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /auth/signout:
-    get:
-      tags:
-        - Auth
-      summary: Sign Out
-      operationId: SignOut
-      parameters: []
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs:
-    get:
-      tags:
-        - Gigs
-      summary: Get All Gigs
-      operationId: GetAllGigs
-      parameters:
-        - name: sub_category
-          in: query
-          description: '{Optional} id'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: seller_location
-          in: query
-          description: '{Optional} e.g: Vietnam,Brazil,France'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: gig_range_price
-          in: query
-          description: '{Optional} min,max'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-            example: 1,1000
-        - name: page
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: filter
-          in: query
-          description: '{Optional} best_selling - new - recommended'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/{gig_slug}:
-    get:
-      tags:
-        - Gigs
-      summary: Get Gig By Slug
-      operationId: GetGigBySlug
-      parameters:
-        - name: gig_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: gig-internal-auditor
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/categories/{category_slug}:
-    get:
-      tags:
-        - Gigs
-      summary: Get All Gigs By Categories
-      operationId: GetAllGigsByCategories
-      parameters:
-        - name: category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: occupational-therapist
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/sub_categories/{sub_category_slug}:
-    get:
-      tags:
-        - Gigs
-      summary: Get All Gigs By Sub_Categories
-      operationId: GetAllGigsBySub_Categories
-      parameters:
-        - name: sub_category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: sub-electrical-engineer
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/services/{service_slug}:
-    get:
-      tags:
-        - Gigs
-      summary: Get All Gigs By Services
-      operationId: GetAllGigsByServices
-      parameters:
-        - name: service_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: service-database-administrator-i
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/create-gig:
-    post:
-      tags:
-        - Gigs
-      summary: Create Gig
-      operationId: CreateGig
-      parameters: []
-      security:
-        - bearerAuth: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - description
-                - price_basic
-                - about_basic
-                - price_standard
-                - about_standard
-                - price_premium
-                - about_premium
-                - gig_service_name
-                - gig_sub_category_name
-                - gig_category_name
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                description:
-                  type: string
-                  description: '{Optional}'
-                price_basic:
-                  type: integer
-                  description: '{Optional}'
-                  format: int32
-                  example: 10
-                about_basic:
-                  type: string
-                  description: '{Optional}'
-                  example: test
-                price_standard:
-                  type: integer
-                  description: '{Optional}'
-                  format: int32
-                  example: 50
-                about_standard:
-                  type: string
-                  description: '{Optional}'
-                price_premium:
-                  type: string
-                  description: '{Optional}'
-                about_premium:
-                  type: string
-                  description: '{Optional}'
-                gig_service_name:
-                  type: string
-                  description: '{Required}'
-                gig_sub_category_name:
-                  type: string
-                  description: '{Required}'
-                gig_category_name:
-                  type: string
-                  description: '{Required}'
-                  example: Occupational Therapist
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/{gig_slug}/upload-gig-image:
-    post:
-      tags:
-        - Gigs
-      summary: Upload Gig Image
-      operationId: UploadGigImage
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: gig_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              required:
-                - image
-              type: object
-              properties:
-                image:
-                  type: string
-                  format: binary
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/{gig_slug}/edit:
-    put:
-      tags:
-        - Gigs
-      summary: Edit Gig
-      operationId: EditGig
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: gig_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - description
-                - price_basic
-                - about_basic
-                - price_standard
-                - about_standard
-                - price_premium
-                - about_premium
-                - gig_service_name
-                - gig_sub_category_name
-                - gig_category_name
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required}'
-                  example: new test
-                description:
-                  type: string
-                  description: '{Required}'
-                price_basic:
-                  type: string
-                  description: '{Optional}'
-                about_basic:
-                  type: string
-                  description: '{Optional}'
-                price_standard:
-                  type: integer
-                  description: '{Optional}'
-                  format: int32
-                  example: 100
-                about_standard:
-                  type: string
-                  description: '{Optional}'
-                  example: t
-                price_premium:
-                  type: integer
-                  description: '{Optional}'
-                  format: int32
-                  example: 1000
-                about_premium:
-                  type: string
-                  description: '{Optional}'
-                  example: hi
-                gig_service_name:
-                  type: string
-                  description: '{Required}'
-                gig_sub_category_name:
-                  type: string
-                  description: '{Required}'
-                gig_category_name:
-                  type: string
-                  description: '{Required}'
-                  example: Internal Auditor
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/{gig_slug}/delete:
-    delete:
-      tags:
-        - Gigs
-      summary: Delete Gig
-      operationId: DeleteGig
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: gig_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories:
-    get:
-      tags:
-        - Categories
-      summary: Get All Categories
-      operationId: GetAllGigCategories
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/create-category:
-    post:
-      tags:
-        - Categories
-      summary: Create Gig Category
-      operationId: CreateGigCategory
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - category_name
-              type: object
-              properties:
-                category_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/{category_slug}:
-    get:
-      tags:
-        - Categories
-      summary: Get Category By Slug
-      operationId: GetCategoryBySlug
-      parameters:
-        - name: category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: internal-auditor
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    put:
-      tags:
-        - Categories
-      summary: Edit Gig Category
-      operationId: EditGigCategory
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: test
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - category_name
-              type: object
-              properties:
-                category_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Categories
-      summary: Delete Category
-      operationId: DeleteCategory
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/sub_categories:
-    get:
-      tags:
-        - Sub_Categories
-      summary: Get All Sub_Categories
-      operationId: GetAllSubCategories
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/sub_categories/create-sub-category:
-    post:
-      tags:
-        - Sub_Categories
-      summary: Create Sub_Category
-      operationId: CreateSubCategory
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - sub_category_name
-                - belong_to_category_id
-              type: object
-              properties:
-                sub_category_name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                belong_to_category_id:
-                  type: integer
-                  description: '{Required}'
-                  format: int32
-                  example: 2
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/sub_categories/{sub_category_slug}:
-    get:
-      tags:
-        - Sub_Categories
-      summary: Get Sub_Category By Slug
-      operationId: GetSubCategoryBySlug
-      parameters:
-        - name: sub_category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: sub-chief-design-engineer
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    put:
-      tags:
-        - Sub_Categories
-      summary: Edit Sub_Category
-      operationId: EditSubCategory
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: sub_category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - sub_category_name
-                - belong_to_category_id
-              type: object
-              properties:
-                sub_category_name:
-                  type: string
-                  description: '{Required}'
-                belong_to_category_id:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Sub_Categories
-      summary: Delete Sub_Category
-      operationId: DeleteSubCategory
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: sub_category_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/services:
-    get:
-      tags:
-        - Services
-      summary: Get All Services
-      operationId: GetAllServices
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/services/create-service:
-    post:
-      tags:
-        - Services
-      summary: Create Services
-      operationId: CreateService
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - service_name
-                - belong_to_sub_category_id
-              type: object
-              properties:
-                service_name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                belong_to_sub_category_id:
-                  type: integer
-                  description: '{Required}'
-                  format: int32
-                  example: 1
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /categories/services/{service_slug}:
-    get:
-      tags:
-        - Services
-      summary: Get Service By Slug
-      operationId: GetServiceBySlug
-      parameters:
-        - name: service_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: service-chief-design-engineer
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    put:
-      tags:
-        - Services
-      summary: Edit Service
-      operationId: EditService
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: service_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: test
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - service_name
-                - belong_to_sub_category_id
-              type: object
-              properties:
-                service_name:
-                  type: string
-                  description: '{Required}'
-                  example: new
-                belong_to_sub_category_id:
-                  type: integer
-                  description: '{Required}'
-                  format: int32
-                  example: 1
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Services
-      summary: Delete Service
-      operationId: DeleteService
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: service_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/orders:
-    get:
-      tags:
-        - Order
-      summary: Get All My Orders
-      operationId: GetAllMyOrders
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/create-order:
-    post:
-      tags:
-        - Order
-      summary: Order Gig
-      operationId: OrderGig
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - gig_slug
-                - gig_package
-              type: object
-              properties:
-                gig_slug:
-                  type: string
-                  description: '{Required}'
-                  example: gig-web-developer-i
-                gig_package:
-                  type: string
-                  description: '{Required} basic - standard - premium'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/complete-order:
-    put:
-      tags:
-        - Order
-      summary: Complete Order
-      operationId: CompleteOrder
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - order_id
-              type: object
-              properties:
-                order_id:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/delete-order-history:
-    delete:
-      tags:
-        - Order
-      summary: Delete Order History
-      operationId: DeleteOrderHistory
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/skills:
-    get:
-      tags:
-        - Complement
-      summary: Get All Skills
-      operationId: GetAllSkills
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/skills/{skill_slug}:
-    get:
-      tags:
-        - Complement
-      summary: Get Skill By Slug
-      operationId: GetSkillBySlug
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: skill_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: snap
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/skills/create-skill:
-    post:
-      tags:
-        - Complement
-      summary: Create Skill
-      operationId: CreateSkill
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - skill_name
-              type: object
-              properties:
-                skill_name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/skills/{skill_id}:
-    put:
-      tags:
-        - Complement
-      summary: Edit Skill
-      operationId: EditSkill
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: skill_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - skill_name
-              type: object
-              properties:
-                skill_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Complement
-      summary: Delete Skill
-      operationId: DeleteSkill
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: skill_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/languages:
-    get:
-      tags:
-        - Complement
-      summary: Get All Languages
-      operationId: GetAllLanguages
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/languages/{language_slug}:
-    get:
-      tags:
-        - Complement
-      summary: Get Language By Slug
-      operationId: GetLanguageBySlug
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: language_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/languages/create-language:
-    post:
-      tags:
-        - Complement
-      summary: Create Language
-      operationId: CreateLanguage
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - language_name
-              type: object
-              properties:
-                language_name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/languages/{language_id}:
-    put:
-      tags:
-        - Complement
-      summary: Edit Language
-      operationId: EditLanguage
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: language_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - language_name
-              type: object
-              properties:
-                language_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Complement
-      summary: Delete Language
-      operationId: DeleteLanguage
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: language_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/universities:
-    get:
-      tags:
-        - Complement
-      summary: Get All Universities
-      operationId: GetAllUniversities
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/universities/{university_slug}:
-    get:
-      tags:
-        - Complement
-      summary: Get University By Slug
-      operationId: GetUniversityBySlug
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: university_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/universities/create-university:
-    post:
-      tags:
-        - Complement
-      summary: Create University
-      operationId: CreateUniversity
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - university_name
-              type: object
-              properties:
-                university_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/universities/{university_id}:
-    put:
-      tags:
-        - Complement
-      summary: Edit University
-      operationId: EditUniversity
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: university_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: 'null'
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - university_name
-              type: object
-              properties:
-                university_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Complement
-      summary: Delete University
-      operationId: DeleteUniversity
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: university_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: 'null'
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/countries:
-    get:
-      tags:
-        - Complement
-      summary: Get All Countries
-      operationId: GetAllCountries
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/countries/{country_slug}:
-    get:
-      tags:
-        - Complement
-      summary: Get Country By Slug
-      operationId: GetCountryBySlug
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: country_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/countries/create-country:
-    post:
-      tags:
-        - Complement
-      summary: Create Country
-      operationId: CreateCountry
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - country_name
-              type: object
-              properties:
-                country_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/countries/{country_id}:
-    put:
-      tags:
-        - Complement
-      summary: Edit Country
-      operationId: EditCountry
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: country_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: 'null'
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - country_name
-              type: object
-              properties:
-                country_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Complement
-      summary: Delete Country
-      operationId: DeleteCountry
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: country_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: 'null'
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/majors:
-    get:
-      tags:
-        - Complement
-      summary: Get All Majors
-      operationId: GetAllMajors
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/majors/{major_slug}:
-    get:
-      tags:
-        - Complement
-      summary: Get Major By Slug
-      operationId: GetMajorBySlug
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: major_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/majors/create-major:
-    post:
-      tags:
-        - Complement
-      summary: Create Major
-      operationId: CreateMajor
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - major_name
-              type: object
-              properties:
-                major_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/majors/{major_id}:
-    put:
-      tags:
-        - Complement
-      summary: Edit Major
-      operationId: EditMajor
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: major_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: 'null'
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - major_name
-              type: object
-              properties:
-                major_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Complement
-      summary: Delete Major
-      operationId: DeleteMajor
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: major_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: 'null'
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/academic_titles:
-    get:
-      tags:
-        - Complement
-      summary: Get All Academic Titles
-      operationId: GetAllAcademicTitles
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/academic_titles/{title_slug}:
-    get:
-      tags:
-        - Complement
-      summary: Get Title By Slug
-      operationId: GetTitleBySlug
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: title_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/academic_titles/create-title:
-    post:
-      tags:
-        - Complement
-      summary: Create Title
-      operationId: CreateTitle
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - title_name
-              type: object
-              properties:
-                title_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /complement/academic_titles/{title_id}:
-    put:
-      tags:
-        - Complement
-      summary: Edit Title
-      operationId: EditTitle
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: title_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - title_name
-              type: object
-              properties:
-                title_name:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Complement
-      summary: Delete Title
-      operationId: DeleteTitle
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: title_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /gigs/{gig_slug}/admin-delete:
-    delete:
-      tags:
-        - Admin
-      summary: Admin Delete Gig
-      operationId: AdminDeleteGig
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: gig_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: gig-account-executive
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
- 
-  /users/create-user:
-    post:
-      tags:
-        - Admin
-      summary: Create User
-      operationId: CreateUser
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - email
-                - password
-                - role
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                email:
-                  type: string
-                  description: '{Required}'
-                  example: testnew@gmail.com
-                password:
-                  type: string
-                  description: '{Required}'
-                  example: p@ssword
-                role:
-                  type: string
-                  description: '{Optional} admin - user - seller'
-                  example: seller
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/{user_slug}/edit-user-account:
-    put:
-      tags:
-        - Admin
-      summary: Edit User Account
-      operationId: EditUserAccount
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: test
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - email
-                - country
-                - birthday
-                - gender
-                - phone
-                - role
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                email:
-                  type: string
-                  description: '{Required}'
-                country:
-                  type: string
-                  description: '{Required}'
-                birthday:
-                  type: string
-                  description: '{Optional} yyyy-mm-dd / yyyy-m-d'
-                gender:
-                  type: string
-                  description: '{Optional} male - female - other'
-                phone:
-                  type: string
-                  description: '{Optional}'
-                role:
-                  type: string
-                  description: '{Optional} admin - user - seller'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/{user_slug}/edit-user-security:
-    put:
-      tags:
-        - Admin
-      summary: Edit User Security
-      operationId: EditUserSecurity
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: test
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - newPassword
-                - confirmPassword
-              type: object
-              properties:
-                newPassword:
-                  type: string
-                  description: '{Required}'
-                  example: testpassword
-                confirmPassword:
-                  type: string
-                  description: '{Required}'
-                  example: testpassword
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/{user_slug}/ban-user:
-    delete:
-      tags:
-        - Admin
-      summary: Ban User
-      operationId: BanUser
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: user2
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/deleted_users:
-    get:
-      tags:
-        - Admin
-      summary: Get All Deleted Users
-      operationId: GetAllDeletedUsers
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/deleted_users/{user_slug}/restore:
-    patch:
-      tags:
-        - Admin
-      summary: Restore User
-      operationId: RestoreUser
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: user4
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - adminPassword
-              type: object
-              properties:
-                adminPassword:
-                  type: string
-                  description: '{Required}'
-                  example: p@ssword
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/deleted_users/{user_slug}/force-delete:
-    delete:
-      tags:
-        - Admin
-      summary: Remove User
-      operationId: RemoveUser
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: test
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/{user_slug}/get-user-deleted-orders:
-    get:
-      tags:
-        - Admin
-      summary: Get User Deleted Orders
-      operationId: GetUserDeletedOrders
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: user1
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/force-delete-order-history:
-    delete:
-      tags:
-        - Admin
-      summary: Force Delete Order History
-      operationId: ForceDeleteOrderHistory
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users:
-    get:
-      tags:
-        - Users
-      summary: Get All Users
-      operationId: GetAllUsers
-      parameters:
-        - name: seller_location
-          in: query
-          description: '{Optional} e.g: Vietnam,Brazil,France'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: page
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: filter
-          in: query
-          description: '{Optional} best_selling - old - recommended'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/{user_slug}:
-    get:
-      tags:
-        - Users
-      summary: Get User By Slug
-      operationId: GetUserBySlug
-      parameters:
-        - name: user_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: user24
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /users/start-selling:
-    put:
-      tags:
-        - Start Selling
-      summary: Seller Onboarding
-      operationId: SellerOnboarding
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          multipart/form-data:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - avatar
-                - phone
-                - about
-                - confirmEmail
-                - avatarUrl
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required}'
-                avatar:
-                  type: string
-                  description: '{Required}'
-                  format: binary
-                phone:
-                  type: string
-                  description: '{Required}'
-                about:
-                  type: string
-                  description: '{Required}'
-                confirmEmail:
-                  type: string
-                  description: '{Required}'
-                avatarUrl:
-                  type: string
-                  description: '{No fill}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/upload-avatar:
-    put:
-      tags:
-        - Avatar
-      summary: Upload Avatar
-      operationId: UploadAvatar
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              required:
-                - avatar
-              type: object
-              properties:
-                avatar:
-                  type: string
-                  format: binary
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/overview:
-    put:
-      tags:
-        - Description
-      summary: Edit User Description
-      operationId: EditUserDescription
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - about
-              type: object
-              properties:
-                about:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/languages/create:
-    post:
-      tags:
-        - Languages
-      summary: Create User Language
-      operationId: CreateUserLanguage
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - language_name
-                - level
-              type: object
-              properties:
-                language_name:
-                  type: string
-                  description: '{Required}'
-                  example: Vietnamese
-                level:
-                  type: string
-                  description: '{Optional} basic - conversational - fluent - native'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/languages/edit:
-    put:
-      tags:
-        - Languages
-      summary: Edit User Language
-      operationId: EditUserLanguage
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - user_language_id
-                - language_name
-                - level
-              type: object
-              properties:
-                user_language_id:
-                  type: string
-                  description: '{Required}'
-                language_name:
-                  type: string
-                  description: '{Required}'
-                  example: English
-                level:
-                  type: string
-                  description: '{Optional} basic - conversational - fluent - native'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/languages/delete:
-    delete:
-      tags:
-        - Languages
-      summary: Delete User Language
-      operationId: DeleteUserLanguage
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/skills/create:
-    post:
-      tags:
-        - Skills
-      summary: Create User Skill
-      operationId: CreateUserSkill
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - skill_name
-                - level
-              type: object
-              properties:
-                skill_name:
-                  type: string
-                  description: '{Required}'
-                  example: SNAP
-                level:
-                  type: string
-                  description: '{Optional} beginner - intermediate - expert'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/skills/edit:
-    put:
-      tags:
-        - Skills
-      summary: Edit User Skill
-      operationId: EditUserSkill
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - user_skill_id
-                - skill_name
-                - level
-              type: object
-              properties:
-                user_skill_id:
-                  type: string
-                  description: '{Required}'
-                skill_name:
-                  type: string
-                  description: '{Required}'
-                  example: SSOP
-                level:
-                  type: string
-                  description: '{Optional} beginner - intermediate - expert'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/skills/delete:
-    delete:
-      tags:
-        - Skills
-      summary: Delete User Skill
-      operationId: DeleteUserSkill
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/education/create:
-    post:
-      tags:
-        - Education
-      summary: Create User Education
-      operationId: CreateUserEducation
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - country_name
-                - university_name
-                - major_name
-                - academic_title
-                - year_of_graduation
-              type: object
-              properties:
-                country_name:
-                  type: string
-                  description: '{Required}'
-                  example: VIetnam
-                university_name:
-                  type: string
-                  description: '{Required}'
-                  example: Cybersoft University
-                major_name:
-                  type: string
-                  description: '{Required}'
-                  example: Bussiness Administration
-                academic_title:
-                  type: string
-                  description: '{Required}'
-                  example: Associate
-                year_of_graduation:
-                  type: integer
-                  description: '{Optional}'
-                  format: int32
-                  example: 1998
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/education/edit:
-    put:
-      tags:
-        - Education
-      summary: Edit User Education
-      operationId: EditUserEducation
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - education_id
-                - country_name
-                - university_name
-                - major_name
-                - academic_title
-                - year_of_graduation
-              type: object
-              properties:
-                education_id:
-                  type: string
-                  description: '{Required}'
-                country_name:
-                  type: string
-                  description: '{Required}'
-                  example: Indonesia
-                university_name:
-                  type: string
-                  description: '{Required}'
-                  example: Al-Isra University
-                major_name:
-                  type: string
-                  description: '{Required}'
-                  example: Clinical Specialist
-                academic_title:
-                  type: string
-                  description: '{Required}'
-                  example: Certificate
-                year_of_graduation:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/education/delete:
-    delete:
-      tags:
-        - Education
-      summary: Delete User Education
-      operationId: DeleteUserEducation
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/certification/create:
-    post:
-      tags:
-        - Certification
-      summary: Create User Certification
-      operationId: CreateUserCertification
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - certification_name
-                - certificated_from
-                - year_of_certification
-              type: object
-              properties:
-                certification_name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                certificated_from:
-                  type: string
-                  description: '{Required}'
-                  example: adobe
-                year_of_certification:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/certification/edit:
-    put:
-      tags:
-        - Certification
-      summary: Edit Certification
-      operationId: EditCertification
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - certification_id
-                - certification_name
-                - certificated_from
-                - year_of_certification
-              type: object
-              properties:
-                certification_id:
-                  type: string
-                  description: '{Required}'
-                certification_name:
-                  type: string
-                  description: '{Required}'
-                certificated_from:
-                  type: string
-                  description: '{Required}'
-                year_of_certification:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /profile/certification/delete:
-    delete:
-      tags:
-        - Certification
-      summary: Delete User Certification
-      operationId: DeleteUserCertification
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /setting/account/edit:
-    put:
-      tags:
-        - Account
-      summary: Edit User Account
-      operationId: PutEditUserAccount
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - name
-                - email
-                - country
-                - birthday
-                - gender
-                - phone
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: '{Required}'
-                email:
-                  type: string
-                  description: '{Required}'
-                country:
-                  type: string
-                  description: '{Required}'
-                birthday:
-                  type: string
-                  description: '{Optional} yyyy-mm-dd / yyyy-m-d'
-                gender:
-                  type: string
-                  description: '{Optional} male - female - other'
-                phone:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /setting/security/edit:
-    put:
-      tags:
-        - Account
-      summary: Edit User Security
-      operationId: PutEditUserSecurity
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - oldPassword
-                - newPassword
-                - confirmPassword
-              type: object
-              properties:
-                oldPassword:
-                  type: string
-                  description: '{Required}'
-                newPassword:
-                  type: string
-                  description: '{Required}'
-                confirmPassword:
-                  type: string
-                  description: '{Required}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /setting/account/deactivate:
-    delete:
-      tags:
-        - Account
-      summary: Deactivate User Account
-      operationId: DeactivateUserAccount
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /lists:
-    get:
-      tags:
-        - Lists
-      summary: Get All My Lists
-      operationId: GetAllMyLists
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /lists/create-list:
-    post:
-      tags:
-        - Lists
-      summary: Create List
-      operationId: CreateList
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - list_name
-                - list_description
-              type: object
-              properties:
-                list_name:
-                  type: string
-                  description: '{Required}'
-                  example: test
-                list_description:
-                  type: string
-                  description: '{Optional}'
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /lists/{list_id}:
-    get:
-      tags:
-        - Lists
-      summary: Get List By Id
-      operationId: GetListById
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: list_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    put:
-      tags:
-        - Lists
-      summary: Edit List
-      operationId: EditList
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: list_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - list_name
-                - list_description
-              type: object
-              properties:
-                list_name:
-                  type: string
-                  description: '{Required}'
-                  example: new test
-                list_description:
-                  type: string
-                  description: '{Optional}'
-                  example: test
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-    delete:
-      tags:
-        - Lists
-      summary: Delete List
-      operationId: DeleteList
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: list_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /search/gigs:
-    get:
-      tags:
-        - Search
-      summary: Gigs Search
-      operationId: GigsSearch
-      parameters:
-        - name: query
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: sub_category
-          in: query
-          description: '{Optional} id'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: seller_location
-          in: query
-          description: '{Optional} e.g: Vietnam,Brazil,France'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-            example: Vietnam
-        - name: gig_range_price
-          in: query
-          description: '{Optional} min,max'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: page
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: filter
-          in: query
-          description: '{Optional} best_selling - new - recommended'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-            example: new
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /search/users:
-    get:
-      tags:
-        - Search
-      summary: Users Search
-      operationId: UsersSearch
-      parameters:
-        - name: query
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-            example: u
-        - name: seller_location
-          in: query
-          description: '{Optional} e.g: Vietnam,Brazil,France'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: page
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: '{Optional}'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-        - name: filter
-          in: query
-          description: '{Optional} best_selling - old - recommended'
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-            example: recommended
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/{list_id}/save-item:
-    post:
-      tags:
-        - Save Items to My List
-      summary: Save Item To List
-      operationId: SaveItemToList
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: list_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - tag_id
-                - tag_type
-              type: object
-              properties:
-                tag_id:
-                  type: string
-                  description: '{Required}'
-                tag_type:
-                  type: string
-                  description: '{Required} GIG - SELLER'
-                  example: SELLER
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/{tag_slug}/reviews:
-    get:
-      tags:
-        - Reviews
-      summary: Get All Reviews For Item
-      operationId: GetAllReviewsForItem
-      parameters:
-        - name: tag_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: gig-research-associate
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/reviews/{review_id}:
-    get:
-      tags:
-        - Reviews
-      summary: Get Review By Id
-      operationId: GetReviewById
-      parameters:
-        - name: review_id
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/{tag_slug}/leave-review:
-    post:
-      tags:
-        - Reviews
-      summary: Review Item
-      operationId: ReviewItem
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: tag_slug
-          in: path
-          description: '{Required}'
-          required: true
-          style: simple
-          schema:
-            type: string
-            example: user18
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - rating
-                - content
-                - tag_type
-              type: object
-              properties:
-                rating:
-                  type: integer
-                  description: '{Required} 1 - 2 - 3 - 4 - 5'
-                  format: int32
-                  example: 5
+                Acc seller: user\[11-25\]@gmail.com / p@ssword
+            operationId: SignIn
+            parameters: []
+            requestBody:
                 content:
-                  type: string
-                  description: '{Optional}'
-                  example: good good
-                tag_type:
-                  type: string
-                  description: '{Required} GIG - SELLER'
-                  example: SELLER
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/reviews/edit:
-    put:
-      tags:
-        - Reviews
-      summary: Edit Review Item
-      operationId: EditReviewItem
-      security:
-        - bearerAuth: []
-      parameters: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            encoding: {}
-            schema:
-              required:
-                - review_id
-                - rating
-                - content
-              type: object
-              properties:
-                review_id:
-                  type: string
-                  description: '{Required}'
-                rating:
-                  type: integer
-                  description: '{Required} 1 - 2 - 3 - 4 - 5'
-                  format: int32
-                  example: 5
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - email
+                                - password
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    description: '{Required}'
+                                    example: admin@gmail.com
+                                password:
+                                    type: string
+                                    description: '{Required}'
+                                    example: p@ssword
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+            security: []
+    /auth/facebook/signin:
+        get:
+            tags:
+                - Auth
+            summary: Facebook Sign In (Copy link to your web browser to test)
+            operationId: FacebookSignIn
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+            security: []
+    /auth/google/signin:
+        get:
+            tags:
+                - Auth
+            summary: Google Sign In (Copy link to your web browser to test)
+            operationId: GoogleSignIn
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+            security: []
+    /auth/signup:
+        post:
+            tags:
+                - Auth
+            summary: Sign Up
+            operationId: SignUp
+            parameters: []
+            requestBody:
                 content:
-                  type: string
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - email
+                                - password
+                                - birthday
+                                - gender
+                                - phone
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required} user name'
+                                    example: test
+                                email:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test@gmail.com
+                                password:
+                                    type: string
+                                    description: '{Required}'
+                                    example: p@ssword
+                                birthday:
+                                    type: string
+                                    description: '{Optional}'
+                                gender:
+                                    type: string
+                                    description: '{Optional} male - female - other'
+                                phone:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /auth/account:
+        get:
+            tags:
+                - Auth
+            summary: Get Account Navbar
+            operationId: GetAccountNavbar
+            parameters: []
+            security:
+                - bearerAuth: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /auth/signout:
+        get:
+            tags:
+                - Auth
+            summary: Sign Out
+            operationId: SignOut
+            parameters: []
+            security:
+                - bearerAuth: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs:
+        get:
+            tags:
+                - Gigs
+            summary: Get All Gigs
+            operationId: GetAllGigs
+            parameters:
+                - name: sub_category
+                  in: query
+                  description: '{Optional} id'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: seller_location
+                  in: query
+                  description: '{Optional} e.g: Vietnam,Brazil,France'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: gig_range_price
+                  in: query
+                  description: '{Optional} min,max'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                      example: 1,1000
+                - name: page
+                  in: query
                   description: '{Optional}'
-                  example: test
-        required: false
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
-  /activities/reviews/delete:
-    delete:
-      tags:
-        - Reviews
-      summary: Delete Review Item
-      operationId: DeleteReviewItem
-      security:
-        - bearerAuth: []
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          headers: {}
-      deprecated: false
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: limit
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: filter
+                  in: query
+                  description: '{Optional} best_selling - new - recommended'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/{gigSlug}:
+        get:
+            tags:
+                - Gigs
+            summary: Get Gig By Slug
+            operationId: GetGigBySlug
+            parameters:
+                - name: gigSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: gig-internal-auditor
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/categories/{categorySlug}:
+        get:
+            tags:
+                - Gigs
+            summary: Get All Gigs By Categories
+            operationId: GetAllGigsByCategories
+            parameters:
+                - name: categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: occupational-therapist
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/sub_categories/{sub_categorySlug}:
+        get:
+            tags:
+                - Gigs
+            summary: Get All Gigs By Sub_Categories
+            operationId: GetAllGigsBySub_Categories
+            parameters:
+                - name: sub_categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: sub-electrical-engineer
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/services/{serviceSlug}:
+        get:
+            tags:
+                - Gigs
+            summary: Get All Gigs By Services
+            operationId: GetAllGigsByServices
+            parameters:
+                - name: serviceSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: service-database-administrator-i
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/create-gig:
+        post:
+            tags:
+                - Gigs
+            summary: Create Gig
+            operationId: CreateGig
+            parameters: []
+            security:
+                - bearerAuth: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - description
+                                - basicPrice
+                                - basicAbout
+                                - standardPrice
+                                - standardAbout
+                                - premiumPrice
+                                - premiumAbout
+                                - gig_service_name
+                                - gig_sub_category_name
+                                - gig_category_name
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                description:
+                                    type: string
+                                    description: '{Optional}'
+                                basicPrice:
+                                    type: integer
+                                    description: '{Optional}'
+                                    format: int32
+                                    example: 10
+                                basicAbout:
+                                    type: string
+                                    description: '{Optional}'
+                                    example: test
+                                standardPrice:
+                                    type: integer
+                                    description: '{Optional}'
+                                    format: int32
+                                    example: 50
+                                standardAbout:
+                                    type: string
+                                    description: '{Optional}'
+                                premiumPrice:
+                                    type: string
+                                    description: '{Optional}'
+                                premiumAbout:
+                                    type: string
+                                    description: '{Optional}'
+                                gig_service_name:
+                                    type: string
+                                    description: '{Required}'
+                                gig_sub_category_name:
+                                    type: string
+                                    description: '{Required}'
+                                gig_category_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Occupational Therapist
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/{gigSlug}/upload-gig-image:
+        post:
+            tags:
+                - Gigs
+            summary: Upload Gig Image
+            operationId: UploadGigImage
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: gigSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            required:
+                                - image
+                            type: object
+                            properties:
+                                image:
+                                    type: string
+                                    format: binary
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/{gigSlug}/edit:
+        put:
+            tags:
+                - Gigs
+            summary: Edit Gig
+            operationId: EditGig
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: gigSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - description
+                                - basicPrice
+                                - basicAbout
+                                - standardPrice
+                                - standardAbout
+                                - premiumPrice
+                                - premiumAbout
+                                - gig_service_name
+                                - gig_sub_category_name
+                                - gig_category_name
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: new test
+                                description:
+                                    type: string
+                                    description: '{Required}'
+                                basicPrice:
+                                    type: string
+                                    description: '{Optional}'
+                                basicAbout:
+                                    type: string
+                                    description: '{Optional}'
+                                standardPrice:
+                                    type: integer
+                                    description: '{Optional}'
+                                    format: int32
+                                    example: 100
+                                standardAbout:
+                                    type: string
+                                    description: '{Optional}'
+                                    example: t
+                                premiumPrice:
+                                    type: integer
+                                    description: '{Optional}'
+                                    format: int32
+                                    example: 1000
+                                premiumAbout:
+                                    type: string
+                                    description: '{Optional}'
+                                    example: hi
+                                gig_service_name:
+                                    type: string
+                                    description: '{Required}'
+                                gig_sub_category_name:
+                                    type: string
+                                    description: '{Required}'
+                                gig_category_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Internal Auditor
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/{gigSlug}/delete:
+        delete:
+            tags:
+                - Gigs
+            summary: Delete Gig
+            operationId: DeleteGig
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: gigSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories:
+        get:
+            tags:
+                - Categories
+            summary: Get All Categories
+            operationId: GetAllGigCategories
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/create-category:
+        post:
+            tags:
+                - Categories
+            summary: Create Gig Category
+            operationId: CreateGigCategory
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - category_name
+                            type: object
+                            properties:
+                                category_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/{categorySlug}:
+        get:
+            tags:
+                - Categories
+            summary: Get Category By Slug
+            operationId: GetCategoryBySlug
+            parameters:
+                - name: categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: internal-auditor
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        put:
+            tags:
+                - Categories
+            summary: Edit Gig Category
+            operationId: EditGigCategory
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: test
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - category_name
+                            type: object
+                            properties:
+                                category_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Categories
+            summary: Delete Category
+            operationId: DeleteCategory
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/sub_categories:
+        get:
+            tags:
+                - Sub_Categories
+            summary: Get All Sub_Categories
+            operationId: GetAllSubCategories
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/sub_categories/create-sub-category:
+        post:
+            tags:
+                - Sub_Categories
+            summary: Create Sub_Category
+            operationId: CreateSubCategory
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - sub_category_name
+                                - belong_to_categoryId
+                            type: object
+                            properties:
+                                sub_category_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                belong_to_categoryId:
+                                    type: integer
+                                    description: '{Required}'
+                                    format: int32
+                                    example: 2
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/sub_categories/{sub_categorySlug}:
+        get:
+            tags:
+                - Sub_Categories
+            summary: Get Sub_Category By Slug
+            operationId: GetSubCategoryBySlug
+            parameters:
+                - name: sub_categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: sub-chief-design-engineer
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        put:
+            tags:
+                - Sub_Categories
+            summary: Edit Sub_Category
+            operationId: EditSubCategory
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: sub_categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - sub_category_name
+                                - belong_to_categoryId
+                            type: object
+                            properties:
+                                sub_category_name:
+                                    type: string
+                                    description: '{Required}'
+                                belong_to_categoryId:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Sub_Categories
+            summary: Delete Sub_Category
+            operationId: DeleteSubCategory
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: sub_categorySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/services:
+        get:
+            tags:
+                - Services
+            summary: Get All Services
+            operationId: GetAllServices
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/services/create-service:
+        post:
+            tags:
+                - Services
+            summary: Create Services
+            operationId: CreateService
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - service_name
+                                - belong_to_sub_categoryId
+                            type: object
+                            properties:
+                                service_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                belong_to_sub_categoryId:
+                                    type: integer
+                                    description: '{Required}'
+                                    format: int32
+                                    example: 1
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /categories/services/{serviceSlug}:
+        get:
+            tags:
+                - Services
+            summary: Get Service By Slug
+            operationId: GetServiceBySlug
+            parameters:
+                - name: serviceSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: service-chief-design-engineer
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        put:
+            tags:
+                - Services
+            summary: Edit Service
+            operationId: EditService
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: serviceSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: test
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - service_name
+                                - belong_to_sub_categoryId
+                            type: object
+                            properties:
+                                service_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: new
+                                belong_to_sub_categoryId:
+                                    type: integer
+                                    description: '{Required}'
+                                    format: int32
+                                    example: 1
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Services
+            summary: Delete Service
+            operationId: DeleteService
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: serviceSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/orders:
+        get:
+            tags:
+                - Order
+            summary: Get All My Orders
+            operationId: GetAllMyOrders
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/create-order:
+        post:
+            tags:
+                - Order
+            summary: Order Gig
+            operationId: OrderGig
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - gigSlug
+                                - gig_package
+                            type: object
+                            properties:
+                                gigSlug:
+                                    type: string
+                                    description: '{Required}'
+                                    example: gig-web-developer-i
+                                gig_package:
+                                    type: string
+                                    description: '{Required} basic - standard - premium'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/complete-order:
+        put:
+            tags:
+                - Order
+            summary: Complete Order
+            operationId: CompleteOrder
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - orderId
+                            type: object
+                            properties:
+                                orderId:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/delete-order-history:
+        delete:
+            tags:
+                - Order
+            summary: Delete Order History
+            operationId: DeleteOrderHistory
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/skills:
+        get:
+            tags:
+                - Complement
+            summary: Get All Skills
+            operationId: GetAllSkills
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/skills/{skillSlug}:
+        get:
+            tags:
+                - Complement
+            summary: Get Skill By Slug
+            operationId: GetSkillBySlug
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: skillSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: snap
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/skills/create-skill:
+        post:
+            tags:
+                - Complement
+            summary: Create Skill
+            operationId: CreateSkill
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - skill_name
+                            type: object
+                            properties:
+                                skill_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/skills/{skillId}:
+        put:
+            tags:
+                - Complement
+            summary: Edit Skill
+            operationId: EditSkill
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: skillId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - skill_name
+                            type: object
+                            properties:
+                                skill_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Complement
+            summary: Delete Skill
+            operationId: DeleteSkill
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: skillId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/languages:
+        get:
+            tags:
+                - Complement
+            summary: Get All Languages
+            operationId: GetAllLanguages
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/languages/{languageSlug}:
+        get:
+            tags:
+                - Complement
+            summary: Get Language By Slug
+            operationId: GetLanguageBySlug
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: languageSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/languages/create-language:
+        post:
+            tags:
+                - Complement
+            summary: Create Language
+            operationId: CreateLanguage
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - language_name
+                            type: object
+                            properties:
+                                language_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/languages/{languageId}:
+        put:
+            tags:
+                - Complement
+            summary: Edit Language
+            operationId: EditLanguage
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: languageId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - language_name
+                            type: object
+                            properties:
+                                language_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Complement
+            summary: Delete Language
+            operationId: DeleteLanguage
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: languageId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/universities:
+        get:
+            tags:
+                - Complement
+            summary: Get All Universities
+            operationId: GetAllUniversities
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/universities/{universitySlug}:
+        get:
+            tags:
+                - Complement
+            summary: Get University By Slug
+            operationId: GetUniversityBySlug
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: universitySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/universities/create-university:
+        post:
+            tags:
+                - Complement
+            summary: Create University
+            operationId: CreateUniversity
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - university_name
+                            type: object
+                            properties:
+                                university_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/universities/{universityId}:
+        put:
+            tags:
+                - Complement
+            summary: Edit University
+            operationId: EditUniversity
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: universityId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: 'null'
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - university_name
+                            type: object
+                            properties:
+                                university_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Complement
+            summary: Delete University
+            operationId: DeleteUniversity
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: universityId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: 'null'
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/countries:
+        get:
+            tags:
+                - Complement
+            summary: Get All Countries
+            operationId: GetAllCountries
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/countries/{countrySlug}:
+        get:
+            tags:
+                - Complement
+            summary: Get Country By Slug
+            operationId: GetCountryBySlug
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: countrySlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/countries/create-country:
+        post:
+            tags:
+                - Complement
+            summary: Create Country
+            operationId: CreateCountry
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - country_name
+                            type: object
+                            properties:
+                                country_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/countries/{countryId}:
+        put:
+            tags:
+                - Complement
+            summary: Edit Country
+            operationId: EditCountry
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: countryId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: 'null'
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - country_name
+                            type: object
+                            properties:
+                                country_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Complement
+            summary: Delete Country
+            operationId: DeleteCountry
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: countryId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: 'null'
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/majors:
+        get:
+            tags:
+                - Complement
+            summary: Get All Majors
+            operationId: GetAllMajors
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/majors/{majorSlug}:
+        get:
+            tags:
+                - Complement
+            summary: Get Major By Slug
+            operationId: GetMajorBySlug
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: majorSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/majors/create-major:
+        post:
+            tags:
+                - Complement
+            summary: Create Major
+            operationId: CreateMajor
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - major_name
+                            type: object
+                            properties:
+                                major_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/majors/{majorId}:
+        put:
+            tags:
+                - Complement
+            summary: Edit Major
+            operationId: EditMajor
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: majorId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: 'null'
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - major_name
+                            type: object
+                            properties:
+                                major_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Complement
+            summary: Delete Major
+            operationId: DeleteMajor
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: majorId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: 'null'
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/academic_titles:
+        get:
+            tags:
+                - Complement
+            summary: Get All Academic Titles
+            operationId: GetAllAcademicTitles
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/academic_titles/{titleSlug}:
+        get:
+            tags:
+                - Complement
+            summary: Get Title By Slug
+            operationId: GetTitleBySlug
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: titleSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/academic_titles/create-title:
+        post:
+            tags:
+                - Complement
+            summary: Create Title
+            operationId: CreateTitle
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - title_name
+                            type: object
+                            properties:
+                                title_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /complement/academic_titles/{titleId}:
+        put:
+            tags:
+                - Complement
+            summary: Edit Title
+            operationId: EditTitle
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: titleId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - title_name
+                            type: object
+                            properties:
+                                title_name:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Complement
+            summary: Delete Title
+            operationId: DeleteTitle
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: titleId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /gigs/{gigSlug}/admin-delete:
+        delete:
+            tags:
+                - Admin
+            summary: Admin Delete Gig
+            operationId: AdminDeleteGig
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: gigSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: gig-account-executive
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+
+    /users/create-user:
+        post:
+            tags:
+                - Admin
+            summary: Create User
+            operationId: CreateUser
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - email
+                                - password
+                                - role
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                email:
+                                    type: string
+                                    description: '{Required}'
+                                    example: testnew@gmail.com
+                                password:
+                                    type: string
+                                    description: '{Required}'
+                                    example: p@ssword
+                                role:
+                                    type: string
+                                    description: '{Optional} admin - user - seller'
+                                    example: seller
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/{userSlug}/edit-user-account:
+        put:
+            tags:
+                - Admin
+            summary: Edit User Account
+            operationId: EditUserAccount
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: test
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - email
+                                - country
+                                - birthday
+                                - gender
+                                - phone
+                                - role
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                email:
+                                    type: string
+                                    description: '{Required}'
+                                country:
+                                    type: string
+                                    description: '{Required}'
+                                birthday:
+                                    type: string
+                                    description: '{Optional} yyyy-mm-dd / yyyy-m-d'
+                                gender:
+                                    type: string
+                                    description: '{Optional} male - female - other'
+                                phone:
+                                    type: string
+                                    description: '{Optional}'
+                                role:
+                                    type: string
+                                    description: '{Optional} admin - user - seller'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/{userSlug}/edit-user-security:
+        put:
+            tags:
+                - Admin
+            summary: Edit User Security
+            operationId: EditUserSecurity
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: test
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - newPassword
+                                - confirmPassword
+                            type: object
+                            properties:
+                                newPassword:
+                                    type: string
+                                    description: '{Required}'
+                                    example: testpassword
+                                confirmPassword:
+                                    type: string
+                                    description: '{Required}'
+                                    example: testpassword
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/{userSlug}/ban-user:
+        delete:
+            tags:
+                - Admin
+            summary: Ban User
+            operationId: BanUser
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: user2
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/deleted_users:
+        get:
+            tags:
+                - Admin
+            summary: Get All Deleted Users
+            operationId: GetAllDeletedUsers
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/deleted_users/{userSlug}/restore:
+        patch:
+            tags:
+                - Admin
+            summary: Restore User
+            operationId: RestoreUser
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: user4
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - adminPassword
+                            type: object
+                            properties:
+                                adminPassword:
+                                    type: string
+                                    description: '{Required}'
+                                    example: p@ssword
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/deleted_users/{userSlug}/force-delete:
+        delete:
+            tags:
+                - Admin
+            summary: Remove User
+            operationId: RemoveUser
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: test
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/{userSlug}/get-user-deleted-orders:
+        get:
+            tags:
+                - Admin
+            summary: Get User Deleted Orders
+            operationId: GetUserDeletedOrders
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: user1
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/force-delete-order-history:
+        delete:
+            tags:
+                - Admin
+            summary: Force Delete Order History
+            operationId: ForceDeleteOrderHistory
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users:
+        get:
+            tags:
+                - Users
+            summary: Get All Users
+            operationId: GetAllUsers
+            parameters:
+                - name: seller_location
+                  in: query
+                  description: '{Optional} e.g: Vietnam,Brazil,France'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: page
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: limit
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: filter
+                  in: query
+                  description: '{Optional} best_selling - old - recommended'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/{userSlug}:
+        get:
+            tags:
+                - Users
+            summary: Get User By Slug
+            operationId: GetUserBySlug
+            parameters:
+                - name: userSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: user24
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /users/start-selling:
+        put:
+            tags:
+                - Start Selling
+            summary: Seller Onboarding
+            operationId: SellerOnboarding
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - avatar
+                                - phone
+                                - about
+                                - confirmEmail
+                                - avatarUrl
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required}'
+                                avatar:
+                                    type: string
+                                    description: '{Required}'
+                                    format: binary
+                                phone:
+                                    type: string
+                                    description: '{Required}'
+                                about:
+                                    type: string
+                                    description: '{Required}'
+                                confirmEmail:
+                                    type: string
+                                    description: '{Required}'
+                                avatarUrl:
+                                    type: string
+                                    description: '{No fill}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/upload-avatar:
+        put:
+            tags:
+                - Avatar
+            summary: Upload Avatar
+            operationId: UploadAvatar
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            required:
+                                - avatar
+                            type: object
+                            properties:
+                                avatar:
+                                    type: string
+                                    format: binary
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/overview:
+        put:
+            tags:
+                - Description
+            summary: Edit User Description
+            operationId: EditUserDescription
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - about
+                            type: object
+                            properties:
+                                about:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/languages/create:
+        post:
+            tags:
+                - Languages
+            summary: Create User Language
+            operationId: CreateUserLanguage
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - language_name
+                                - level
+                            type: object
+                            properties:
+                                language_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Vietnamese
+                                level:
+                                    type: string
+                                    description: '{Optional} basic - conversational - fluent - native'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/languages/edit:
+        put:
+            tags:
+                - Languages
+            summary: Edit User Language
+            operationId: EditUserLanguage
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - user_languageId
+                                - language_name
+                                - level
+                            type: object
+                            properties:
+                                user_languageId:
+                                    type: string
+                                    description: '{Required}'
+                                language_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: English
+                                level:
+                                    type: string
+                                    description: '{Optional} basic - conversational - fluent - native'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/languages/delete:
+        delete:
+            tags:
+                - Languages
+            summary: Delete User Language
+            operationId: DeleteUserLanguage
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/skills/create:
+        post:
+            tags:
+                - Skills
+            summary: Create User Skill
+            operationId: CreateUserSkill
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - skill_name
+                                - level
+                            type: object
+                            properties:
+                                skill_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: SNAP
+                                level:
+                                    type: string
+                                    description: '{Optional} beginner - intermediate - expert'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/skills/edit:
+        put:
+            tags:
+                - Skills
+            summary: Edit User Skill
+            operationId: EditUserSkill
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - user_skillId
+                                - skill_name
+                                - level
+                            type: object
+                            properties:
+                                user_skillId:
+                                    type: string
+                                    description: '{Required}'
+                                skill_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: SSOP
+                                level:
+                                    type: string
+                                    description: '{Optional} beginner - intermediate - expert'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/skills/delete:
+        delete:
+            tags:
+                - Skills
+            summary: Delete User Skill
+            operationId: DeleteUserSkill
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/education/create:
+        post:
+            tags:
+                - Education
+            summary: Create User Education
+            operationId: CreateUserEducation
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - country_name
+                                - university_name
+                                - major_name
+                                - academic_title
+                                - yearOfGraduation
+                            type: object
+                            properties:
+                                country_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: VIetnam
+                                university_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Cybersoft University
+                                major_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Bussiness Administration
+                                academic_title:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Associate
+                                yearOfGraduation:
+                                    type: integer
+                                    description: '{Optional}'
+                                    format: int32
+                                    example: 1998
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/education/edit:
+        put:
+            tags:
+                - Education
+            summary: Edit User Education
+            operationId: EditUserEducation
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - educationId
+                                - country_name
+                                - university_name
+                                - major_name
+                                - academic_title
+                                - yearOfGraduation
+                            type: object
+                            properties:
+                                educationId:
+                                    type: string
+                                    description: '{Required}'
+                                country_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Indonesia
+                                university_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Al-Isra University
+                                major_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Clinical Specialist
+                                academic_title:
+                                    type: string
+                                    description: '{Required}'
+                                    example: Certificate
+                                yearOfGraduation:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/education/delete:
+        delete:
+            tags:
+                - Education
+            summary: Delete User Education
+            operationId: DeleteUserEducation
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/certification/create:
+        post:
+            tags:
+                - Certification
+            summary: Create User Certification
+            operationId: CreateUserCertification
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - certification_name
+                                - certificatedFrom
+                                - yearOfCertification
+                            type: object
+                            properties:
+                                certification_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                certificatedFrom:
+                                    type: string
+                                    description: '{Required}'
+                                    example: adobe
+                                yearOfCertification:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/certification/edit:
+        put:
+            tags:
+                - Certification
+            summary: Edit Certification
+            operationId: EditCertification
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - certificationId
+                                - certification_name
+                                - certificatedFrom
+                                - yearOfCertification
+                            type: object
+                            properties:
+                                certificationId:
+                                    type: string
+                                    description: '{Required}'
+                                certification_name:
+                                    type: string
+                                    description: '{Required}'
+                                certificatedFrom:
+                                    type: string
+                                    description: '{Required}'
+                                yearOfCertification:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /profile/certification/delete:
+        delete:
+            tags:
+                - Certification
+            summary: Delete User Certification
+            operationId: DeleteUserCertification
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /setting/account/edit:
+        put:
+            tags:
+                - Account
+            summary: Edit User Account
+            operationId: PutEditUserAccount
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - name
+                                - email
+                                - country
+                                - birthday
+                                - gender
+                                - phone
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    description: '{Required}'
+                                email:
+                                    type: string
+                                    description: '{Required}'
+                                country:
+                                    type: string
+                                    description: '{Required}'
+                                birthday:
+                                    type: string
+                                    description: '{Optional} yyyy-mm-dd / yyyy-m-d'
+                                gender:
+                                    type: string
+                                    description: '{Optional} male - female - other'
+                                phone:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /setting/security/edit:
+        put:
+            tags:
+                - Account
+            summary: Edit User Security
+            operationId: PutEditUserSecurity
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - oldPassword
+                                - newPassword
+                                - confirmPassword
+                            type: object
+                            properties:
+                                oldPassword:
+                                    type: string
+                                    description: '{Required}'
+                                newPassword:
+                                    type: string
+                                    description: '{Required}'
+                                confirmPassword:
+                                    type: string
+                                    description: '{Required}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /setting/account/deactivate:
+        delete:
+            tags:
+                - Account
+            summary: Deactivate User Account
+            operationId: DeactivateUserAccount
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /lists:
+        get:
+            tags:
+                - Lists
+            summary: Get All My Lists
+            operationId: GetAllMyLists
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /lists/create-list:
+        post:
+            tags:
+                - Lists
+            summary: Create List
+            operationId: CreateList
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - list_name
+                                - list_description
+                            type: object
+                            properties:
+                                list_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: test
+                                list_description:
+                                    type: string
+                                    description: '{Optional}'
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /lists/{listId}:
+        get:
+            tags:
+                - Lists
+            summary: Get List By Id
+            operationId: GetListById
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: listId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        put:
+            tags:
+                - Lists
+            summary: Edit List
+            operationId: EditList
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: listId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - list_name
+                                - list_description
+                            type: object
+                            properties:
+                                list_name:
+                                    type: string
+                                    description: '{Required}'
+                                    example: new test
+                                list_description:
+                                    type: string
+                                    description: '{Optional}'
+                                    example: test
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+        delete:
+            tags:
+                - Lists
+            summary: Delete List
+            operationId: DeleteList
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: listId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /search/gigs:
+        get:
+            tags:
+                - Search
+            summary: Gigs Search
+            operationId: GigsSearch
+            parameters:
+                - name: query
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: sub_category
+                  in: query
+                  description: '{Optional} id'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: seller_location
+                  in: query
+                  description: '{Optional} e.g: Vietnam,Brazil,France'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                      example: Vietnam
+                - name: gig_range_price
+                  in: query
+                  description: '{Optional} min,max'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: page
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: limit
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: filter
+                  in: query
+                  description: '{Optional} best_selling - new - recommended'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                      example: new
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /search/users:
+        get:
+            tags:
+                - Search
+            summary: Users Search
+            operationId: UsersSearch
+            parameters:
+                - name: query
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                      example: u
+                - name: seller_location
+                  in: query
+                  description: '{Optional} e.g: Vietnam,Brazil,France'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: page
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: limit
+                  in: query
+                  description: '{Optional}'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                - name: filter
+                  in: query
+                  description: '{Optional} best_selling - old - recommended'
+                  required: false
+                  style: form
+                  explode: true
+                  schema:
+                      type: string
+                      example: recommended
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/{listId}/save-item:
+        post:
+            tags:
+                - Save Items to My List
+            summary: Save Item To List
+            operationId: SaveItemToList
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: listId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - tagId
+                                - tagType
+                            type: object
+                            properties:
+                                tagId:
+                                    type: string
+                                    description: '{Required}'
+                                tagType:
+                                    type: string
+                                    description: '{Required} Gig - Seller'
+                                    example: Seller
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/{tagSlug}/reviews:
+        get:
+            tags:
+                - Reviews
+            summary: Get All Reviews For Item
+            operationId: GetAllReviewsForItem
+            parameters:
+                - name: tagSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: gig-research-associate
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/reviews/{reviewId}:
+        get:
+            tags:
+                - Reviews
+            summary: Get Review By Id
+            operationId: GetReviewById
+            parameters:
+                - name: reviewId
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/{tagSlug}/leave-review:
+        post:
+            tags:
+                - Reviews
+            summary: Review Item
+            operationId: ReviewItem
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: tagSlug
+                  in: path
+                  description: '{Required}'
+                  required: true
+                  style: simple
+                  schema:
+                      type: string
+                      example: user18
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - rating
+                                - content
+                                - tagType
+                            type: object
+                            properties:
+                                rating:
+                                    type: integer
+                                    description: '{Required} 1 - 2 - 3 - 4 - 5'
+                                    format: int32
+                                    example: 5
+                                content:
+                                    type: string
+                                    description: '{Optional}'
+                                    example: good good
+                                tagType:
+                                    type: string
+                                    description: '{Required} Gig - Seller'
+                                    example: Seller
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/reviews/edit:
+        put:
+            tags:
+                - Reviews
+            summary: Edit Review Item
+            operationId: EditReviewItem
+            security:
+                - bearerAuth: []
+            parameters: []
+            requestBody:
+                content:
+                    application/x-www-form-urlencoded:
+                        encoding: {}
+                        schema:
+                            required:
+                                - reviewId
+                                - rating
+                                - content
+                            type: object
+                            properties:
+                                reviewId:
+                                    type: string
+                                    description: '{Required}'
+                                rating:
+                                    type: integer
+                                    description: '{Required} 1 - 2 - 3 - 4 - 5'
+                                    format: int32
+                                    example: 5
+                                content:
+                                    type: string
+                                    description: '{Optional}'
+                                    example: test
+                required: false
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
+    /activities/reviews/delete:
+        delete:
+            tags:
+                - Reviews
+            summary: Delete Review Item
+            operationId: DeleteReviewItem
+            security:
+                - bearerAuth: []
+            parameters: []
+            responses:
+                '200':
+                    description: ''
+                    headers: {}
+            deprecated: false
 tags:
-  - name: Auth
-  - name: Search
-  - name: Gigs
-  - name: Categories
-  - name: Sub_Categories
-  - name: Services
-  - name: Users
-  - name: Start Selling
-  - name: Avatar
-  - name: Description
-  - name: Account
-  - name: Languages
-  - name: Skills
-  - name: Education
-  - name: Certification
-  - name: Lists
-  - name: Save Items to My List
-  - name: Order
-  - name: Reviews
-  - name: Admin
-  - name: Complement
+    - name: Auth
+    - name: Search
+    - name: Gigs
+    - name: Categories
+    - name: Sub_Categories
+    - name: Services
+    - name: Users
+    - name: Start Selling
+    - name: Avatar
+    - name: Description
+    - name: Account
+    - name: Languages
+    - name: Skills
+    - name: Education
+    - name: Certification
+    - name: Lists
+    - name: Save Items to My List
+    - name: Order
+    - name: Reviews
+    - name: Admin
+    - name: Complement
