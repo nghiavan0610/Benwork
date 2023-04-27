@@ -1,20 +1,40 @@
 const { ApiError } = require('../../helpers/ErrorHandler');
-const { GigCategory, GigSubCategory, GigService } = require('../../db/models');
+const models = require('../../db/models');
+const { GigCategory, GigSubCategory, GigService } = models;
+
+const defineModel = (type) => {
+    let modelName;
+    switch (true) {
+        case /^gig_categories/.test(type):
+            modelName = 'GigCategory';
+            break;
+        case /^gig_sub_categories/.test(type):
+            modelName = 'GigSubCategory';
+            break;
+        case /^gig_services/.test(type):
+            modelName = 'GigService';
+            break;
+        default:
+            throw new ApiError(405, `Unknown type: '${type}'`);
+    }
+    return modelName;
+};
 
 class CategoriesService {
     // categories
-    // [GET] /api/categories
-    async getAllCategories() {
+    // [GET] /api/v1/categories
+    async getAllCategories(type) {
         try {
-            const categories = await GigCategory.findAll();
+            const modelName = defineModel(type);
+            const categories = await models[modelName].findAll();
             return categories;
         } catch (err) {
             throw err;
         }
     }
 
-    // [GET] /api/categories/:category_slug
-    async getCategoryBySlug(category_slug) {
+    // [GET] /api/v1/categories/:gigCategorySlug
+    async getCategoryBySlug(gigCategorySlug) {
         try {
             const category = await GigCategory.findOne({
                 attributes: ['id', 'name', 'slug'],
@@ -22,9 +42,9 @@ class CategoriesService {
                     attributes: ['id', 'name', 'slug'],
                     model: GigSubCategory,
                 },
-                where: { slug: category_slug },
+                where: { slug: gigCategorySlug },
             });
-            if (!category) throw new ApiError(404, `Gig category with slug='${category_slug}' was not found`);
+            if (!category) throw new ApiError(404, `Gig category with slug='${gigCategorySlug}' was not found`);
 
             return category;
         } catch (err) {
@@ -32,29 +52,27 @@ class CategoriesService {
         }
     }
 
-    // [POST] /api/categories/create-category
-    async createCategory(formData) {
+    // [POST] /api/v1/categories/selective-update
+    async updateCategory(formData) {
         try {
-            const { category_name } = formData;
-            const newCategory = await GigCategory.findOrCreate({
-                where: { name: category_name },
-                defaults: {},
-            });
-            return newCategory[0];
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [PUT] /api/categories/:category_slug
-    async editCategory(category_slug, formData) {
-        try {
-            const { category_name } = formData;
-            const newCategory = await GigCategory.update({ name: category_name }, { where: { slug: category_slug } });
-            if (!newCategory[0] && !newCategory[1][0]) {
-                throw new ApiError(404, `Gig category with slug='${category_slug}' was not found to edit`);
+            const { id, name, method } = formData;
+            switch (method) {
+                case 'create':
+                    await GigCategory.create({ name });
+                    break;
+                case 'update':
+                    const updated = await GigCategory.update({ name }, { where: { id } });
+                    if (!updated[0] && !updated[1][0]) {
+                        throw new ApiError(404, `Gig category '${id}' was not found to edit`);
+                    }
+                    break;
+                case 'delete':
+                    const deleted = await GigCategory.destroy({ where: { id } });
+                    if (!deleted) throw new ApiError(404, `Gig category '${id}' was not found to delete`);
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
-            return newCategory[1][0];
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
                 throw new ApiError(403, `This gig category already exists`);
@@ -63,42 +81,18 @@ class CategoriesService {
         }
     }
 
-    // [DELETE] /api/categories/:category_slug
-    async deleteCategory(category_slug) {
-        try {
-            const deleted = await GigCategory.destroy({
-                where: { slug: category_slug },
-            });
-            if (!deleted) throw new ApiError(404, `Gig category with slug='${category_slug}' was not found to delete`);
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // sub_categories
-    // [GET] /api/categories/sub_categories
-    async getAllSubCategories() {
-        try {
-            const subCategories = await GigSubCategory.findAll();
-            return subCategories;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [GET] /api/categories/sub_categories/:sub_category_slug
-    async getSubCategoryBySlug(sub_category_slug) {
+    // [GET] /api/v1/categories/sub_categories/:gigSubCategorySlug
+    async getSubCategoryBySlug(gigSubCategorySlug) {
         try {
             const subCategory = await GigSubCategory.findOne({
-                attributes: ['id', 'name', 'gig_category_id', 'slug'],
-                include: {
-                    attributes: ['id', 'name', 'slug'],
-                    model: GigService,
-                },
-                where: { slug: sub_category_slug },
+                attributes: ['id', 'name', 'gigCategoryId', 'slug'],
+                include: [
+                    { attributes: ['id', 'name', 'slug'], model: GigCategory },
+                    { attributes: ['id', 'name', 'slug'], model: GigService },
+                ],
+                where: { slug: gigSubCategorySlug },
             });
-            if (!subCategory)
-                throw new ApiError(404, `Gig sub_category with slug='${sub_category_slug}' was not found`);
+            if (!subCategory) throw new ApiError(404, `Gig sub_category ='${gigSubCategorySlug}' was not found`);
 
             return subCategory;
         } catch (err) {
@@ -106,42 +100,32 @@ class CategoriesService {
         }
     }
 
-    // [POST] /api/categories/sub_categories/create-sub-category
-    async createSubCategory(formData) {
+    // [POST] /api/v1/categories/sub_categories/selective-update
+    async updateSubCategory(formData) {
         try {
-            const { sub_category_name, belong_to_category_id } = formData;
-            const category = await GigCategory.findByPk(belong_to_category_id, { attributes: ['id'] });
-            if (!category) {
-                throw new ApiError(404, `Gig category with id='${belong_to_category_id}' was not found`);
+            const { id, name, gigCategoryId, method } = formData;
+            if (method !== 'delete') {
+                const category = await GigCategory.findByPk(gigCategoryId, { attributes: ['id'] });
+                if (!category) throw new ApiError(404, `Gig category '${gigCategoryId}' was not found`);
             }
 
-            const newSubCategory = await GigSubCategory.findOrCreate({
-                where: { name: sub_category_name, gig_category_id: category.id },
-                defaults: {},
-            });
-            return newSubCategory[0];
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [PUT] /api/categories/sub_categories/:sub_category_slug
-    async editSubCategory(sub_category_slug, formData) {
-        try {
-            const { sub_category_name, belong_to_category_id } = formData;
-            const category = await GigCategory.findByPk(belong_to_category_id, { attributes: ['id'] });
-            if (!category) {
-                throw new ApiError(404, `Gig category with id='${belong_to_category_id}' was not found`);
+            switch (method) {
+                case 'create':
+                    await GigSubCategory.create({ name, gigCategoryId });
+                    break;
+                case 'update':
+                    const updated = await GigSubCategory.update({ name, gigCategoryId }, { where: { id } });
+                    if (!updated[0] && !updated[1][0]) {
+                        throw new ApiError(404, `Gig sub_category '${id}' was not found to edit`);
+                    }
+                    break;
+                case 'delete':
+                    const deleted = await GigSubCategory.destroy({ where: { id } });
+                    if (!deleted) throw new ApiError(404, `Gig sub_category '${id}' was not found to delete`);
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
-
-            const newSubCategory = await GigSubCategory.update(
-                { name: sub_category_name, gig_category_id: category.id },
-                { where: { slug: sub_category_slug } },
-            );
-            if (!newSubCategory[0] && !newSubCategory[1][0]) {
-                throw new ApiError(404, `Gig sub_category with slug='${sub_category_slug}' was not found to edit`);
-            }
-            return newSubCategory[1][0];
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
                 throw new ApiError(403, 'This gig sub_category already exists');
@@ -150,38 +134,22 @@ class CategoriesService {
         }
     }
 
-    // [DELETE] /api/categories/sub_categories/:sub_category_slug
-    async deleteSubCategory(sub_category_slug) {
-        try {
-            const deleted = await GigSubCategory.destroy({
-                where: { slug: sub_category_slug },
-            });
-            if (!deleted)
-                throw new ApiError(404, `Gig sub_category with slug='${sub_category_slug}' was not found to delete`);
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // services
-    // [GET] /api/categories/services
-    async getAllServices() {
-        try {
-            const services = await GigService.findAll();
-            return services;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [GET] /api/categories/services/:service_slug
-    async getServiceBySlug(service_slug) {
+    // [GET] /api/v1/categories/services/:gigServiceSlug
+    async getServiceBySlug(gigServiceSlug) {
         try {
             const service = await GigService.findOne({
-                attributes: ['id', 'name', 'gig_sub_category_id', 'slug'],
-                where: { slug: service_slug },
+                attributes: ['id', 'name', 'gigSubCategoryId', 'slug'],
+                include: {
+                    attributes: ['id', 'name', 'slug'],
+                    model: GigSubCategory,
+                    include: {
+                        attributes: ['id', 'name', 'slug'],
+                        model: GigCategory,
+                    },
+                },
+                where: { slug: gigServiceSlug },
             });
-            if (!service) throw new ApiError(404, `Gig service with slug='${service_slug}' was not found`);
+            if (!service) throw new ApiError(404, `Gig service '${gigServiceSlug}' was not found`);
 
             return service;
         } catch (err) {
@@ -189,58 +157,36 @@ class CategoriesService {
         }
     }
 
-    // [POST] /api/categories/services/create-service
-    async createService(formData) {
+    // [POST] /api/v1/categories/services/selective-update
+    async updateService(formData) {
         try {
-            const { service_name, belong_to_sub_category_id } = formData;
-            const subCategory = await GigSubCategory.findByPk(belong_to_sub_category_id, { attributes: ['id'] });
-            if (!subCategory) {
-                throw new ApiError(404, `Gig sub_category with id='${belong_to_sub_category_id}' was not found`);
+            const { id, name, gigSubCategoryId, method } = formData;
+            if (method !== 'delete') {
+                const category = await GigSubCategory.findByPk(gigSubCategoryId, { attributes: ['id'] });
+                if (!category) throw new ApiError(404, `Gig sub_category '${gigSubCategoryId}' was not found`);
             }
 
-            const newService = await GigService.findOrCreate({
-                where: { name: service_name, gig_sub_category_id: subCategory.id },
-                defaults: {},
-            });
-            return newService[0];
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [PUT] /api/categories/services/:service_slug
-    async editService(service_slug, formData) {
-        try {
-            const { service_name, belong_to_sub_category_id } = formData;
-            const subCategory = await GigSubCategory.findByPk(belong_to_sub_category_id, { attributes: ['id'] });
-            if (!subCategory) {
-                throw new ApiError(404, `Gig sub_category with id='${belong_to_sub_category_id}' was not found`);
+            switch (method) {
+                case 'create':
+                    await GigService.create({ name, gigSubCategoryId });
+                    break;
+                case 'update':
+                    const updated = await GigService.update({ name, gigSubCategoryId }, { where: { id } });
+                    if (!updated[0] && !updated[1][0]) {
+                        throw new ApiError(404, `Gig service '${id}' was not found to edit`);
+                    }
+                    break;
+                case 'delete':
+                    const deleted = await GigService.destroy({ where: { id } });
+                    if (!deleted) throw new ApiError(404, `Gig service '${id}' was not found to delete`);
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
-
-            const newService = await GigService.update(
-                { name: service_name, gig_sub_category_id: subCategory.id },
-                { where: { slug: service_slug } },
-            );
-            if (!newService[0] && !newService[1][0]) {
-                throw new ApiError(404, `Gig service with slug='${service_slug}' was not found to edit`);
-            }
-            return newService[1][0];
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
                 throw new ApiError(403, 'This gig service already exists');
             }
-            throw err;
-        }
-    }
-
-    // [DELETE] /api/categories/services/:service_slug
-    async deleteService(service_slug) {
-        try {
-            const deleted = await GigService.destroy({
-                where: { slug: service_slug },
-            });
-            if (!deleted) throw new ApiError(404, `Gig service with slug='${service_slug}' was not found to delete`);
-        } catch (err) {
             throw err;
         }
     }
