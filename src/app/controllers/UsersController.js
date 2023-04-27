@@ -4,7 +4,7 @@ const { response } = require('../../helpers/Response');
 const { ApiError } = require('../../helpers/ErrorHandler');
 
 class UsersController {
-    // [GET] /api/users
+    // [GET] /api/v1/users
     async getAllUsers(req, res, next) {
         try {
             const queryData = req.query;
@@ -15,126 +15,85 @@ class UsersController {
         }
     }
 
-    // [GET] /api/users/:user_slug
+    // [GET] /api/v1/users/:userSlug
     async getUserBySlug(req, res, next) {
         try {
-            const { user_slug } = req.params;
-            const user = await usersService.getUserBySlug(user_slug);
-            res.status(200).json(response(user));
+            const { userSlug } = req.params;
+            const user = await usersService.getUserBySlug(userSlug);
+            res.status(200).json(response({ user }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [PUT] /api/users/start-selling
+    // [PUT] /api/v1/users/start-selling
     async startSelling(req, res, next) {
         try {
             const { id } = req.user;
-            const { avatarUrl, avatar, ...formData } = req.body;
-            if (!req.file && (!avatarUrl || avatarUrl === 'null')) {
-                throw new ApiError(404, 'Please upload your avatar');
-            }
-            for (let i in formData) {
-                if (!formData[i] || formData[i] === 'null') {
-                    throw new ApiError(404, 'Please fill in the mandatory fields');
-                }
-            }
-
-            if (req.file) {
-                formData.avatarUrl = req.file.path;
-            } else {
-                formData.avatarUrl = avatarUrl;
-            }
+            const formData = req.body;
 
             const userOnboarding = await usersService.startSelling(id, formData);
-            res.status(201).json(response(userOnboarding));
+            res.status(201).json(response({ userOnboarding }));
         } catch (err) {
-            if (req.file) {
-                cloudinary.uploader.destroy(req.file.filename);
-            }
             next(err);
         }
     }
 
-    // [POST] /api/users/create-user
+    // [POST] /api/v1/users/create
     async createUser(req, res, next) {
         try {
             const formData = req.body;
-            const newUser = await usersService.createUser(formData);
-            res.status(201).json(response(newUser));
+            const user = await usersService.createUser(formData);
+            res.status(201).json(response({ user }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [PUT] /api/users/:user_slug/edit-user-account
+    // [PUT] /api/v1/users/:userSlug/profile/edit
     async updateUserAccount(req, res, next) {
         try {
             const formData = req.body;
-            const { user_slug } = req.params;
-            const newUser = await usersService.updateUserAccount(user_slug, formData);
-            res.status(201).json(response(newUser));
+            const { userSlug } = req.params;
+            const authUser = req.user;
+            const updatedUser = await usersService.updateUserAccount(userSlug, formData, authUser);
+            res.status(201).json(response({ updatedUser }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [PUT] /api/users/:user_slug/edit-user-security
+    // [PUT] /api/v1/users/:userSlug/security/edit
     async updateUserSecurity(req, res, next) {
         try {
             const formData = req.body;
-            const { user_slug } = req.params;
-            await usersService.updateUserSecurity(user_slug, formData);
-            res.status(201).json(response());
+            const { userSlug } = req.params;
+            const authUser = req.user;
+            await usersService.updateUserSecurity(userSlug, formData, authUser);
+            res.status(200).json(response('Password updated successfully'));
         } catch (err) {
             next(err);
         }
     }
 
-    // [DELETE] /api/users/:user_slug/ban-user
-    async banUser(req, res, next) {
-        try {
-            const { id } = req.user;
-            const formData = req.body;
-            const { user_slug } = req.params;
-            await usersService.banUser(id, user_slug, formData);
-            res.status(200).json(response('User has been banned'));
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    // [GET] /api/users/get-deleted-users
+    // [GET] /api/v1/users/deleted_users
     async getDeletedUser(req, res, next) {
         try {
             const deletedUsers = await usersService.getDeletedUser();
-            res.status(200).json(response(deletedUsers));
+            res.status(200).json(response({ deletedUsers }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [PATCH] /api/users/deleted_users/:user_slug/restore
-    async restoreUser(req, res, next) {
+    // [DELETE] /api/v1/users/deleted_users/:userSlug/handle-delete-user
+    async handleDeletedUser(req, res, next) {
         try {
             const { id } = req.user;
             const formData = req.body;
-            const { user_slug } = req.params;
-            await usersService.restoreUser(id, user_slug, formData);
-            res.status(200).json(response('User has been restored successfully'));
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    // [DELETE] /api/users/deleted_users/:user_slug/force-delete
-    async forceDeleteUser(req, res, next) {
-        try {
-            const { id } = req.user;
-            const formData = req.body;
-            const { user_slug } = req.params;
-            await usersService.forceDeleteUser(id, user_slug, formData);
-            res.status(200).json(response('Account has been removed'));
+            const { userSlug } = req.params;
+            await usersService.handleDeletedUser(id, userSlug, formData);
+            res.status(200).json(response());
         } catch (err) {
             next(err);
         }
