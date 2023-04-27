@@ -3,7 +3,9 @@ const { Op } = require('sequelize');
 
 const gigFilterClause = (queryData) => {
     const searchQuery = queryData.query;
+    const searchCategory = queryData.category;
     const searchSubCategory = queryData.sub_category;
+    const searchService = queryData.service;
     const searchLocations = queryData.seller_location ? queryData.seller_location.split(',') : [];
     const searchRangePrice = queryData.gig_range_price ? queryData.gig_range_price.split(',') : [];
 
@@ -26,13 +28,23 @@ const gigFilterClause = (queryData) => {
 
         options.where.push({
             [Op.or]: searchTerms.map((term) => {
-                return sequelize.literal(`Gig.name LIKE '${term}%'`);
+                return sequelize.literal(`Gig.name LIKE '%${term}%'`);
             }),
+        });
+    }
+    if (searchCategory) {
+        options.where.push({
+            [Op.and]: { ['$GigService.GigSubCategory.GigCategory.id$']: { [Op.eq]: searchCategory } },
         });
     }
     if (searchSubCategory) {
         options.where.push({
             [Op.and]: { ['$GigService.GigSubCategory.id$']: { [Op.eq]: searchSubCategory } },
+        });
+    }
+    if (searchService) {
+        options.where.push({
+            [Op.and]: { ['$GigService.id$']: { [Op.eq]: searchService } },
         });
     }
     if (searchLocations.length > 0) {
@@ -42,7 +54,7 @@ const gigFilterClause = (queryData) => {
     }
     if (searchRangePrice.length > 0) {
         options.where.push({
-            [Op.and]: { price_basic: { [Op.between]: searchRangePrice } },
+            [Op.and]: { basicPrice: { [Op.between]: searchRangePrice } },
         });
     }
 
@@ -79,7 +91,7 @@ const userFilterClause = (queryData) => {
 
         options.where.push({
             [Op.or]: searchTerms.map((term) => {
-                return sequelize.literal(`User.name LIKE '${term}%'`);
+                return sequelize.literal(`User.name LIKE '%${term}%'`);
             }),
         });
     }
