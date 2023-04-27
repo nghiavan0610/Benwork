@@ -15,335 +15,199 @@ const {
 const cloudinary = require('cloudinary').v2;
 
 class ProfileService {
-    // [PUT] /api/profile/upload-avatar
-    async uploadAvatar(id, avatarUrl) {
+    // [PUT] /api/v1/profile/upload-avatar
+    async uploadAvatar(authUser, avatarUrl) {
         try {
-            const user = await User.findOne({
-                where: { id },
-            });
-
-            if (user.avatarUrl) {
-                const decodedUrl = decodeURI(user.avatarUrl);
+            if (authUser.avatarUrl) {
+                const decodedUrl = decodeURI(authUser.avatarUrl);
                 const imageFileName = decodedUrl.split('/').slice(-3).join('/').replace('.jpg', '');
 
                 await cloudinary.uploader.destroy(imageFileName);
             }
 
-            const newAvatar = await user.update({ avatarUrl });
-            return newAvatar.avatarUrl;
+            authUser.avatarUrl = avatarUrl;
+            authUser.save();
+
+            return authUser.avatarUrl;
         } catch (err) {
             throw err;
         }
     }
 
-    // [PUT] /api/profile/overview
-    async updateUserDescription(id, about) {
+    // [DELETE] /api/v1/profile/deactivate
+    async deactivateAccount(id, formData) {
         try {
-            const user = await User.update({ about }, { where: { id } });
-            const newDescription = user[1][0].about;
-            return newDescription;
-        } catch (err) {
-            throw err;
-        }
-    }
+            const { confirmPassword } = formData;
+            const user = await User.findByPk(id, { attributes: ['id', 'password'] });
 
-    // [POST] /api/profile/languages/create
-    async createUserLanguage(id, formData) {
-        try {
-            const { language_name, level } = formData;
-            const language = await Language.findOne({ attributes: ['id'], where: { name: language_name } });
-            if (!language) {
-                throw new ApiError(404, `Language '${language_name}' was not found`);
-            }
+            if (user && user.comparePassword(confirmPassword)) {
+                await user.destroy({});
 
-            const [newLanguage, created] = await UserLanguage.findOrCreate({
-                where: {
-                    user_id: id,
-                    language_id: language.id,
-                },
-                defaults: { level },
-            });
-
-            if (!created) {
-                await newLanguage.update({ level });
+                await redisClient.del(`accessToken:${user.id}`);
+                await redisClient.del(`refreshToken:${user.id}`);
+            } else {
+                throw new ApiError(403, 'Wrong password');
             }
         } catch (err) {
             throw err;
         }
     }
 
-    // [PUT] /api/profile/languages/edit
-    async updateUserLanguage(id, formData) {
+    // [POST] /api/v1/profile/languages/selective-update
+    async updateProfileLanguage(id, formData) {
         try {
-            const { user_language_id, language_name, level } = formData;
-            const language = await Language.findOne({ attributes: ['id'], where: { name: language_name } });
-            if (!language) {
-                throw new ApiError(404, `Language '${language_name}' was not found`);
+            const { userLanguageId, languageId, level, method } = formData;
+            const language = await Language.findByPk(languageId, { attributes: ['id'] });
+            if (!language) throw new ApiError(404, `Language '${languageId}' was not found`);
+
+            let checkUserLanguage;
+            if (method !== 'create') {
+                checkUserLanguage = await UserLanguage.findByPk(userLanguageId);
+                if (!checkUserLanguage) throw new ApiError(404, 'You do not have this language to update');
+                if (checkUserLanguage.userId !== id)
+                    throw new ApiError(401, 'You do not have permission to update this language');
             }
 
-            const updated = await UserLanguage.update(
-                {
-                    language_id: language.id,
-                    level,
-                },
-                { where: { id: user_language_id, user_id: id } },
-            );
-            if (!updated[0]) {
-                throw new ApiError(404, 'You do not have this language to edit');
+            switch (method) {
+                case 'create':
+                    await UserLanguage.create({ userId: id, languageId, level });
+                    break;
+                case 'update':
+                    await checkUserLanguage.update({ languageId, level });
+                    break;
+                case 'delete':
+                    await checkUserLanguage.destroy({ force: true });
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
-                throw new ApiError(403, 'This language already exists');
+                throw new ApiError(403, 'You already have this language');
             }
             throw err;
         }
     }
 
-    // [DELETE] /api/profile/languages/delete
-    async deleteUserLanguage(id, user_language_id) {
+    // [POST] /api/v1/profile/skills/selective-update
+    async updateProfileSkill(id, formData) {
         try {
-            const deleted = await UserLanguage.destroy({
-                where: { id: user_language_id, user_id: id },
-                force: true,
-            });
+            const { userSkillId, skillId, level, method } = formData;
+            const skill = await Skill.findByPk(skillId, { attributes: ['id'] });
+            if (!skill) throw new ApiError(404, `Skill '${skillId}' was not found`);
 
-            if (!deleted) {
-                throw new ApiError(404, 'You do not have this language to delete');
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [POST] /api/profile/skills/create
-    async createUserSkill(id, formData) {
-        try {
-            const { skill_name, level } = formData;
-            const skill = await Skill.findOne({ where: { name: skill_name } });
-            if (!skill) {
-                throw new ApiError(404, `Skill '${skill_name}' was not found`);
+            let checkUserSkill;
+            if (method !== 'create') {
+                checkUserSkill = await UserSkill.findByPk(userSkillId);
+                if (!checkUserSkill) throw new ApiError(404, 'You do not have this skill to update');
+                if (checkUserSkill.userId !== id)
+                    throw new ApiError(401, 'You do not have permission to update this skill');
             }
 
-            const [newSkill, created] = await UserSkill.findOrCreate({
-                where: {
-                    user_id: id,
-                    skill_id: skill.id,
-                },
-                defaults: { level },
-            });
-
-            if (!created) {
-                await newSkill.update({ level });
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [PUT] /api/profile/skills/edit
-    async updateUserSkill(id, formData) {
-        try {
-            const { user_skill_id, skill_name, level } = formData;
-            const skill = await Skill.findOne({ attributes: ['id'], where: { name: skill_name } });
-            if (!skill) {
-                throw new ApiError(404, `Skill '${skill_name}' was not found`);
-            }
-
-            const updated = await UserSkill.update(
-                {
-                    skill_id: skill.id,
-                    level,
-                },
-                { where: { id: user_skill_id, user_id: id } },
-            );
-            if (!updated[0]) {
-                throw new ApiError(404, 'You do not have this skill to edit');
+            switch (method) {
+                case 'create':
+                    await UserSkill.create({ userId: id, skillId, level });
+                    break;
+                case 'update':
+                    await checkUserSkill.update({ skillId, level });
+                    break;
+                case 'delete':
+                    await checkUserSkill.destroy({ force: true });
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
-                throw new ApiError(403, 'This skill already exists');
+                throw new ApiError(403, 'You already have this skill');
             }
             throw err;
         }
     }
 
-    // [DELETE] /api/profile/skills/delete
-    async deleteUserSkill(id, user_skill_id) {
+    // [POST] /api/v1/profile/education/selective-update
+    async updateProfileEducation(id, formData) {
         try {
-            const deleted = await UserSkill.destroy({
-                where: { id: user_skill_id, user_id: id },
-                force: true,
-            });
+            const { userEducationId, universityId, majorId, countryId, titleId, yearOfGraduation, method } = formData;
 
-            if (!deleted) {
-                throw new ApiError(404, 'You do not have this skill to delete');
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [POST] /api/profile/education/create
-    async createUserEducation(id, formData) {
-        try {
-            const { university_name, major_name, country_name, academic_title, year_of_graduation } = formData;
             const [university, major, country, title] = await Promise.all([
-                University.findOne({ where: { name: university_name } }),
-                Major.findOne({ where: { name: major_name } }),
-                Country.findOne({ where: { name: country_name } }),
-                AcademicTitle.findOne({ where: { name: academic_title } }),
+                University.findByPk(universityId, { attributes: ['id'] }),
+                Major.findByPk(majorId, { attributes: ['id'] }),
+                Country.findByPk(countryId, { attributes: ['id'] }),
+                AcademicTitle.findByPk(titleId, { attributes: ['id'] }),
             ]);
 
-            if (!university) {
-                throw new ApiError(404, `University '${university_name}' was not found`);
-            }
-            if (!major) {
-                throw new ApiError(404, `Major '${major_name}' was not found`);
-            }
-            if (!country) {
-                throw new ApiError(404, `Country '${country_name}' was not found`);
-            }
-            if (!title) {
-                throw new ApiError(404, `Title '${academic_title}' was not found`);
+            if (!university) throw new ApiError(404, `University '${universityId}' was not found`);
+            if (!major) throw new ApiError(404, `Major '${majorId}' was not found`);
+            if (!country) throw new ApiError(404, `Country '${countryId}' was not found`);
+            if (!title) throw new ApiError(404, `Title '${titleId}' was not found`);
+
+            let checkUserEducation;
+            if (method !== 'create') {
+                checkUserEducation = await UserEducation.findByPk(userEducationId);
+                if (!checkUserEducation) throw new ApiError(404, 'You do not have this education to update');
+                if (checkUserEducation.userId !== id)
+                    throw new ApiError(401, 'You do not have permission to update this education');
             }
 
-            const [newEducation, created] = await UserEducation.findOrCreate({
-                where: {
-                    user_id: id,
-                    university_id: university.id,
-                    major_id: major.id,
-                    country_id: country.id,
-                    title_id: title.id,
-                },
-                defaults: { year_of_graduation },
-            });
-
-            if (!created) {
-                await newEducation.update({ year_of_graduation });
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [PUT] /api/profile/education/edit
-    async updateUserEducation(id, formData) {
-        try {
-            const { education_id, university_name, major_name, country_name, academic_title, year_of_graduation } =
-                formData;
-            const [university, major, country, title] = await Promise.all([
-                University.findOne({ where: { name: university_name } }),
-                Major.findOne({ where: { name: major_name } }),
-                Country.findOne({ where: { name: country_name } }),
-                AcademicTitle.findOne({ where: { name: academic_title } }),
-            ]);
-
-            if (!university) {
-                throw new ApiError(404, `University '${university_name}' was not found`);
-            }
-            if (!major) {
-                throw new ApiError(404, `Major '${major_name}' was not found`);
-            }
-            if (!country) {
-                throw new ApiError(404, `Country '${country_name}' was not found`);
-            }
-            if (!title) {
-                throw new ApiError(404, `Title '${academic_title}' was not found`);
-            }
-
-            const updated = await UserEducation.update(
-                {
-                    university_id: university.id,
-                    major_id: major.id,
-                    country_id: country.id,
-                    title_id: title.id,
-                    year_of_graduation,
-                },
-                { where: { id: education_id, user_id: id } },
-            );
-            if (!updated[0]) {
-                throw new ApiError(404, 'This is not your education profile to edit');
+            switch (method) {
+                case 'create':
+                    await UserEducation.create({
+                        userId: id,
+                        universityId,
+                        majorId,
+                        countryId,
+                        titleId,
+                        yearOfGraduation,
+                    });
+                    break;
+                case 'update':
+                    await checkUserEducation.update({ universityId, majorId, countryId, titleId, yearOfGraduation });
+                    break;
+                case 'delete':
+                    await checkUserEducation.destroy({ force: true });
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
-                throw new ApiError(403, 'This education profile already exists');
+                throw new ApiError(403, 'You already have this education');
             }
             throw err;
         }
     }
 
-    // [DELETE] /api/profile/education/delete
-    async deleteUserEducation(id, education_id) {
+    // [POST] /api/v1/profile/certification/selective-update
+    async updateProfileCertification(id, formData) {
         try {
-            const deleted = await UserEducation.destroy({
-                where: { id: education_id, user_id: id },
-                force: true,
-            });
+            const { userCertificationId, name, certificatedFrom, yearOfCertification, method } = formData;
 
-            if (!deleted) {
-                throw new ApiError(404, 'This is not your education profile to delete');
+            let checkUserCertification;
+            if (method !== 'create') {
+                checkUserCertification = await UserCertification.findByPk(userCertificationId);
+                if (!checkUserCertification) throw new ApiError(404, 'You do not have this certification to update');
+                if (checkUserCertification.userId !== id)
+                    throw new ApiError(401, 'You do not have permission to update this certification');
             }
-        } catch (err) {
-            throw err;
-        }
-    }
 
-    // [POST] /api/profile/certification/create
-    async createUserCertification(id, formData) {
-        try {
-            const { certification_name, certificated_from, year_of_certification } = formData;
-            const [newCertification, created] = await UserCertification.findOrCreate({
-                where: {
-                    user_id: id,
-                    name: certification_name,
-                    certificated_from,
-                },
-                defaults: { year_of_certification },
-            });
-
-            if (!created) {
-                await newCertification.update({ year_of_certification });
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [PUT] /api/profile/certification/edit
-    async updateUserCertification(id, formData) {
-        try {
-            const { certification_id, certification_name, certificated_from, year_of_certification } = formData;
-            const updated = await UserCertification.update(
-                {
-                    name: certification_name,
-                    certificated_from,
-                    year_of_certification,
-                },
-                { where: { id: certification_id, user_id: id } },
-            );
-            if (!updated[0]) {
-                throw new ApiError(404, 'This is not your certification profile to edit');
+            switch (method) {
+                case 'create':
+                    await UserCertification.create({ userId: id, name, certificatedFrom, yearOfCertification });
+                    break;
+                case 'update':
+                    await checkUserCertification.update({ name, certificatedFrom, yearOfCertification });
+                    break;
+                case 'delete':
+                    await checkUserCertification.destroy({ force: true });
+                    break;
+                default:
+                    throw new ApiError(405, `Invalid method '${method}'`);
             }
         } catch (err) {
             if (err.name === 'SequelizeUniqueConstraintError') {
-                throw new ApiError(403, 'This certification profile already exists');
+                throw new ApiError(403, 'You already have this certification');
             }
-            throw err;
-        }
-    }
-
-    // [DELETE] /api/profile/certification/delete
-    async deleteUserCertification(id, certification_id) {
-        try {
-            const deleted = await UserCertification.destroy({
-                where: { id: certification_id, user_id: id },
-                force: true,
-            });
-
-            if (!deleted) {
-                throw new ApiError(404, 'This is not your certification profile to delete');
-            }
-        } catch (err) {
             throw err;
         }
     }
