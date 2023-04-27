@@ -19,18 +19,18 @@ module.exports = {
                     id: i + 1,
                     createdAt: new Date(),
                     updatedAt: new Date(),
-                    list_id: ListID[(Math.random() * ListID.length) | 0].id,
-                    tag_id: GigID[(Math.random() * GigID.length) | 0].id,
-                    tag_type: 'GIG',
+                    listId: ListID[(Math.random() * ListID.length) | 0].id,
+                    tagId: GigID[(Math.random() * GigID.length) | 0].id,
+                    tagType: 'Gig',
                 });
             } else {
                 data.push({
                     id: i + 1,
                     createdAt: new Date(),
                     updatedAt: new Date(),
-                    list_id: ListID[(Math.random() * ListID.length) | 0].id,
-                    tag_id: SellerID[(Math.random() * SellerID.length) | 0].id,
-                    tag_type: 'SELLER',
+                    listId: ListID[(Math.random() * ListID.length) | 0].id,
+                    tagId: SellerID[(Math.random() * SellerID.length) | 0].id,
+                    tagType: 'Seller',
                 });
             }
         }
@@ -41,8 +41,8 @@ module.exports = {
                 index ===
                 self.findIndex(
                     (t) =>
-                        (t.list_id === value.list_id && t.tag_id === value.tag_id && t.tag_type === 'GIG') ||
-                        (t.list_id === value.list_id && t.tag_id === value.tag_id && t.tag_type === 'SELLER'),
+                        (t.listId === value.listId && t.tagId === value.tagId && t.tagType === 'Gig') ||
+                        (t.listId === value.listId && t.tagId === value.tagId && t.tagType === 'Seller'),
                 ),
         );
         await queryInterface.bulkInsert('Collections', data, {});

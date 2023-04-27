@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Order.belongsTo(models.User, {
                 as: 'OrderOwner',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 // onDelete: 'RESTRICT',
                 // hooks: true,
             });
             Order.belongsTo(models.Gig, {
                 as: 'GigIsOrdered',
-                foreignKey: 'gig_id',
+                foreignKey: 'gigId',
                 // onDelete: 'RESTRICT',
                 // hooks: true,
             });
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            user_id: {
+            userId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id',
                 },
             },
-            gig_id: {
+            gigId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
@@ -52,14 +52,38 @@ module.exports = (sequelize, DataTypes) => {
                     },
                 },
             },
-            is_done: {
+            quantity: {
+                type: DataTypes.INTEGER,
+                defaultValue: 1,
+                set(value) {
+                    if (!value || value === 'null') {
+                        this.setDataValue('quantity', 1);
+                    } else {
+                        this.setDataValue('quantity', value);
+                    }
+                },
+            },
+            total: {
+                type: DataTypes.FLOAT,
+                set(value) {
+                    if (!value || value === 'null') {
+                        this.setDataValue('total', null);
+                    } else {
+                        if (!parseFloat(value)) {
+                            throw new ValidationError(400, 'Wrong price format');
+                        }
+                        this.setDataValue('total', parseFloat(value));
+                    }
+                },
+            },
+            isDone: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
                 set(value) {
                     if (!value || value === 'null') {
-                        this.setDataValue('is_done', false);
+                        this.setDataValue('isDone', false);
                     } else {
-                        this.setDataValue('is_done', value);
+                        this.setDataValue('isDone', value);
                     }
                 },
             },
@@ -68,8 +92,7 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Order',
             timestamps: true,
-            createdAt: 'order_date',
-            paranoid: true,
+            createdAt: 'orderDate',
         },
     );
     return Order;

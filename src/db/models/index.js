@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../../config/config.js')[env];
+const config = require(__dirname + '/../../configs/sequelizeConfig')[env];
 const db = {};
 
 let sequelize;
@@ -19,7 +19,7 @@ if (config.use_env_variable) {
 (async () => {
     try {
         await sequelize.authenticate();
-        console.log(`Connection to database with port='${config.port}' has been established successfully.`);
+        console.log(`Connection to Mysql database has been established successfully.`);
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }

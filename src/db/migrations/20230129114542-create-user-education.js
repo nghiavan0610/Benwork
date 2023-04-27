@@ -12,7 +12,7 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER,
                     },
-                    user_id: {
+                    userId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         references: {
@@ -22,7 +22,7 @@ module.exports = {
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    university_id: {
+                    universityId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'Universities',
@@ -31,7 +31,7 @@ module.exports = {
                         onDelete: 'SET NULL',
                         hooks: true,
                     },
-                    major_id: {
+                    majorId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'Majors',
@@ -40,7 +40,7 @@ module.exports = {
                         onDelete: 'SET NULL',
                         hooks: true,
                     },
-                    country_id: {
+                    countryId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'Countries',
@@ -49,7 +49,7 @@ module.exports = {
                         onDelete: 'SET NULL',
                         hooks: true,
                     },
-                    title_id: {
+                    titleId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'AcademicTitles',
@@ -58,30 +58,8 @@ module.exports = {
                         onDelete: 'SET NULL',
                         hooks: true,
                     },
-                    year_of_graduation: {
+                    yearOfGraduation: {
                         type: Sequelize.INTEGER,
-                        set(value) {
-                            if (!value || value === 'null') {
-                                this.setDataValue('year_of_graduation', null);
-                            } else {
-                                if (!value.match(/^[0-9]+$/)) {
-                                    throw new ValidationError(400, 'Wrong year format');
-                                }
-
-                                if (value.length !== 4) {
-                                    throw new ValidationError(400, 'Year of graduation must have 4 characters');
-                                }
-
-                                if (value > new Date().getFullYear()) {
-                                    throw new ValidationError(
-                                        400,
-                                        'Year of graduation cannot be greater than present year',
-                                    );
-                                }
-
-                                this.setDataValue('year_of_graduation', value);
-                            }
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -92,12 +70,6 @@ module.exports = {
                         type: Sequelize.DATE,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'UserEducations',
-                ['user_id', 'university_id', 'major_id', 'country_id', 'title_id'],
-                { name: 'ix_user_educations', unique: true },
                 { transaction },
             );
             await transaction.commit();

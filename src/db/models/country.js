@@ -4,20 +4,13 @@ const SequelizeSlugify = require('sequelize-slugify');
 module.exports = (sequelize, DataTypes) => {
     class Country extends Model {
         static associate(models) {
-            // Country.belongsToMany(models.User, {
-            //     through: models.UserEducation,
-            //     foreignKey: 'country_id',
-            //     otherKey: 'user_id',
-            //     onDelete: 'SET NULL',
-            //     hooks: true,
-            // });
             Country.hasMany(models.UserEducation, {
                 sourceKey: 'id',
-                foreignKey: 'country_id',
+                foreignKey: 'countryId',
             });
             Country.hasMany(models.User, {
                 sourceKey: 'id',
-                foreignKey: 'country_id',
+                foreignKey: 'countryId',
             });
         }
     }
@@ -46,13 +39,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Country',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_country_name',
-                    unique: true,
-                    fields: ['name'],
-                },
-            ],
         },
     );
 

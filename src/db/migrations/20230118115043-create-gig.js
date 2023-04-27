@@ -11,11 +11,6 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                validate: {
-                    notEmpty: {
-                        msg: 'Please enter your gig name',
-                    },
-                },
             },
             image: {
                 type: Sequelize.STRING,
@@ -23,55 +18,25 @@ module.exports = {
             description: {
                 type: Sequelize.STRING,
             },
-            price_basic: {
+            basicPrice: {
                 type: Sequelize.FLOAT,
-                set(value) {
-                    if (!value || value === 'null') {
-                        this.setDataValue('price_basic', 0);
-                    } else {
-                        if (typeof value !== 'number') {
-                            throw new ValidationError(400, 'Wrong price format');
-                        }
-                        this.setDataValue('price_basic', value);
-                    }
-                },
             },
-            about_basic: {
+            basicAbout: {
                 type: Sequelize.STRING,
             },
-            price_standard: {
+            standardPrice: {
                 type: Sequelize.FLOAT,
-                set(value) {
-                    if (!value || value === 'null') {
-                        this.setDataValue('price_standard', null);
-                    } else {
-                        if (typeof value !== 'number') {
-                            throw new ValidationError(400, 'Wrong price format');
-                        }
-                        this.setDataValue('price_standard', value);
-                    }
-                },
             },
-            about_standard: {
+            standardAbout: {
                 type: Sequelize.STRING,
             },
-            price_premium: {
+            premiumPrice: {
                 type: Sequelize.FLOAT,
-                set(value) {
-                    if (!value || value === 'null') {
-                        this.setDataValue('price_premium', 0);
-                    } else {
-                        if (typeof value !== 'number') {
-                            throw new ValidationError(400, 'Wrong price format');
-                        }
-                        this.setDataValue('price_premium', value);
-                    }
-                },
             },
-            about_premium: {
+            premiumAbout: {
                 type: Sequelize.STRING,
             },
-            seller_id: {
+            sellerId: {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
                 references: {
@@ -81,7 +46,7 @@ module.exports = {
                 onDelete: 'CASCADE',
                 hooks: true,
             },
-            gig_service_id: {
+            gigServiceId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'GigServices',

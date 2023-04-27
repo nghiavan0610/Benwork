@@ -4,16 +4,9 @@ const SequelizeSlugify = require('sequelize-slugify');
 module.exports = (sequelize, DataTypes) => {
     class Major extends Model {
         static associate(models) {
-            // Major.belongsToMany(models.User, {
-            //     through: models.UserEducation,
-            //     foreignKey: 'major_id',
-            //     otherKey: 'user_id',
-            //     onDelete: 'SET NULL',
-            //     hooks: true,
-            // });
             Major.hasMany(models.UserEducation, {
                 sourceKey: 'id',
-                foreignKey: 'major_id',
+                foreignKey: 'majorId',
             });
         }
     }
@@ -42,13 +35,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Major',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_major_name',
-                    unique: true,
-                    fields: ['name'],
-                },
-            ],
         },
     );
 

@@ -5,54 +5,43 @@ const SequelizeSlugify = require('sequelize-slugify');
 const { ValidationError } = require('../../helpers/ErrorHandler');
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
-        matchPassword(enterPassword) {
-            return bcrypt.compareSync(enterPassword, this.password);
+        comparePassword(candidatePassword) {
+            return bcrypt.compareSync(candidatePassword, this.password);
         }
         static associate(models) {
             User.hasMany(models.Gig, {
                 as: 'Gigs',
                 sourceKey: 'id',
-                foreignKey: 'seller_id',
+                foreignKey: 'sellerId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
-            User.belongsTo(models.Country, { foreignKey: 'country_id' });
+            User.belongsTo(models.Country, { foreignKey: 'countryId' });
             User.hasMany(models.Order, {
                 as: 'Orders',
                 sourceKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
             User.hasMany(models.List, {
                 as: 'Lists',
                 sourceKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
 
-            // Polymorphic M:M
-            // User.hasMany(models.Collection, {
-            //     as: 'SellerIsCollectedBy',
-            //     foreignKey: 'tag_id',
-            //     constraints: false,
-            //     scope: {
-            //         tag_type: 'SELLER',
-            //     },
-            //     onDelete: 'CASCADE',
-            //     hooks: true,
-            // });
             User.belongsToMany(models.List, {
                 as: 'SellersIsCollectedBy',
                 through: {
                     model: models.Collection,
                     unique: false,
                     scope: {
-                        tag_type: 'SELLER',
+                        tagType: 'Seller',
                     },
                 },
-                foreignKey: 'tag_id',
+                foreignKey: 'tagId',
                 constraints: false,
                 onDelete: 'CASCADE',
                 hooks: true,
@@ -61,15 +50,15 @@ module.exports = (sequelize, DataTypes) => {
             User.hasMany(models.Review, {
                 as: 'Reviews',
                 sourceKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
             User.hasMany(models.Review, {
                 as: 'ReviewBody',
-                foreignKey: 'tag_id',
+                foreignKey: 'tagId',
                 scope: {
-                    tag_type: 'SELLER',
+                    tagType: 'Seller',
                 },
                 constraints: false,
                 onDelete: 'CASCADE',
@@ -77,42 +66,25 @@ module.exports = (sequelize, DataTypes) => {
             });
             User.hasMany(models.UserLanguage, {
                 sourceKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
             User.hasMany(models.UserSkill, {
                 sourceKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
             User.hasMany(models.UserEducation, {
                 sourceKey: 'id',
-                foreignKey: 'user_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
             User.hasMany(models.UserCertification, {
                 sourceKey: 'id',
-                foreignKey: 'user_id',
-                onDelete: 'CASCADE',
-                hooks: true,
-            });
-            User.hasMany(models.Conversation, {
-                as: 'Started_User_Conversation',
-                sourceKey: 'id',
-                foreignKey: 'started_by_user_id',
-            });
-            User.hasMany(models.Conversation, {
-                as: 'Recipient_Conversation',
-                sourceKey: 'id',
-                foreignKey: 'recipient_user_id',
-            });
-            User.hasMany(models.Message, {
-                as: 'Sender_Message',
-                sourceKey: 'id',
-                foreignKey: 'sender_id',
+                foreignKey: 'userId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
@@ -136,7 +108,6 @@ module.exports = (sequelize, DataTypes) => {
             },
             email: {
                 type: DataTypes.STRING,
-                // allowNull: false,
                 unique: true,
                 validate: {
                     isEmail: {
@@ -146,10 +117,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             password: {
                 type: DataTypes.STRING,
-                // allowNull: false,
                 set(value) {
                     if (value.length >= 8 && value.length <= 20) {
-                        const hashedPassword = bcrypt.hashSync(value, 10);
+                        const salt = bcrypt.genSaltSync(10);
+                        const hashedPassword = bcrypt.hashSync(value, salt);
                         this.setDataValue('password', hashedPassword);
                     } else {
                         throw new ValidationError(400, 'Your password should be between 8-20 characters!');
@@ -190,7 +161,7 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 },
             },
-            country_id: {
+            countryId: {
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'Country',
@@ -217,8 +188,8 @@ module.exports = (sequelize, DataTypes) => {
                             throw new ValidationError(400, 'Wrong phone number format');
                         }
 
-                        if (value.length !== 10) {
-                            throw new ValidationError(400, 'Your phone number must have 10 characters');
+                        if (value.length < 9 || value.length > 11) {
+                            throw new ValidationError(400, 'Your phone number must between 9 and 11 numbers');
                         }
 
                         this.setDataValue('phone', value);
@@ -237,8 +208,8 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             avatarUrl: DataTypes.STRING,
-            facebook_id: DataTypes.STRING,
-            google_id: DataTypes.STRING,
+            facebookId: DataTypes.STRING,
+            googleId: DataTypes.STRING,
             slug: {
                 type: DataTypes.STRING,
                 unique: true,

@@ -13,7 +13,7 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER,
                     },
-                    user_id: {
+                    userId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         references: {
@@ -23,7 +23,7 @@ module.exports = {
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    skill_id: {
+                    skillId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'Skills',
@@ -35,13 +35,6 @@ module.exports = {
                     level: {
                         type: Sequelize.ENUM('beginner', 'intermediate', 'expert'),
                         defaultValue: 'beginner',
-                        set(value) {
-                            if (!value || value === 'null') {
-                                this.setDataValue('level', 'beginner');
-                            } else {
-                                this.setDataValue('level', value);
-                            }
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -52,12 +45,6 @@ module.exports = {
                         type: Sequelize.DATE,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'UserSkills',
-                ['user_id', 'skill_id'],
-                { name: 'ix_user_skills', unique: true },
                 { transaction },
             );
             await transaction.commit();

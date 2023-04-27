@@ -16,11 +16,6 @@ module.exports = {
                     name: {
                         type: Sequelize.STRING,
                         allowNull: false,
-                        validate: {
-                            notEmpty: {
-                                msg: 'Please enter the gig category name',
-                            },
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -35,12 +30,6 @@ module.exports = {
                         type: Sequelize.STRING,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'GigCategories',
-                ['name'],
-                { name: 'ix_gig_category_name', unique: true },
                 { transaction },
             );
             await transaction.commit();

@@ -17,24 +17,24 @@ module.exports = {
             if (i < 200) {
                 data.push({
                     id: i + 1,
-                    review_date: new Date(),
+                    reviewDate: new Date(),
                     updatedAt: new Date(),
-                    user_id: UserID[(Math.random() * UserID.length) | 0].id,
-                    tag_id: GigID[(Math.random() * GigID.length) | 0].id,
+                    userId: UserID[(Math.random() * UserID.length) | 0].id,
+                    tagId: GigID[(Math.random() * GigID.length) | 0].id,
                     content: (Math.random() + 1).toString(36).substring(2),
                     rating: Math.floor(Math.random() * (5 - 1 + 1) + 1),
-                    tag_type: 'GIG',
+                    tagType: 'Gig',
                 });
             } else {
                 data.push({
                     id: i + 1,
-                    review_date: new Date(),
+                    reviewDate: new Date(),
                     updatedAt: new Date(),
-                    user_id: UserID[(Math.random() * UserID.length) | 0].id,
-                    tag_id: SellerID[(Math.random() * SellerID.length) | 0].id,
+                    userId: UserID[(Math.random() * UserID.length) | 0].id,
+                    tagId: SellerID[(Math.random() * SellerID.length) | 0].id,
                     content: (Math.random() + 1).toString(36).substring(2),
                     rating: Math.floor(Math.random() * (5 - 1 + 1) + 1),
-                    tag_type: 'SELLER',
+                    tagType: 'Seller',
                 });
             }
         }
@@ -45,8 +45,8 @@ module.exports = {
                 index ===
                 self.findIndex(
                     (t) =>
-                        (t.user_id === value.user_id && t.tag_id === value.tag_id && t.tag_type === 'GIG') ||
-                        (t.user_id === value.user_id && t.tag_id === value.tag_id && t.tag_type === 'SELLER'),
+                        (t.userId === value.userId && t.tagId === value.tagId && t.tagType === 'Gig') ||
+                        (t.userId === value.userId && t.tagId === value.tagId && t.tagType === 'Seller'),
                 ),
         );
         await queryInterface.bulkInsert('Reviews', data, {});

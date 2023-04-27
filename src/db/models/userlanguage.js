@@ -1,11 +1,10 @@
 'use strict';
-const { validate } = require('express-validation');
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class UserLanguage extends Model {
         static associate(models) {
-            UserLanguage.belongsTo(models.User, { foreignKey: 'user_id' });
-            UserLanguage.belongsTo(models.Language, { foreignKey: 'language_id' });
+            UserLanguage.belongsTo(models.User, { foreignKey: 'userId' });
+            UserLanguage.belongsTo(models.Language, { foreignKey: 'languageId' });
         }
     }
     UserLanguage.init(
@@ -15,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            user_id: {
+            userId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
@@ -24,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id',
                 },
             },
-            language_id: {
+            languageId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
@@ -48,13 +47,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'UserLanguage',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_user_languages',
-                    unique: true,
-                    fields: ['user_id', 'language_id'],
-                },
-            ],
         },
     );
     return UserLanguage;

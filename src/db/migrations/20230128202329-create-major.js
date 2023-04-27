@@ -16,11 +16,6 @@ module.exports = {
                     name: {
                         type: Sequelize.STRING,
                         allowNull: false,
-                        validate: {
-                            notEmpty: {
-                                msg: 'Please enter the major name',
-                            },
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -37,7 +32,6 @@ module.exports = {
                 },
                 { transaction },
             );
-            await queryInterface.addIndex('Majors', ['name'], { name: 'ix_major_name', unique: true }, { transaction });
             await transaction.commit();
         } catch (err) {
             await transaction.rollback();

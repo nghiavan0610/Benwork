@@ -4,14 +4,7 @@ const SequelizeSlugify = require('sequelize-slugify');
 module.exports = (sequelize, DataTypes) => {
     class List extends Model {
         static associate(models) {
-            List.belongsTo(models.User, { as: 'ListOwner', foreignKey: 'user_id' });
-            // List.hasMany(models.Collection, {
-            //     as: 'Collections',
-            //     sourceKey: 'id',
-            //     foreignKey: 'list_id',
-            //     onDelete: 'CASCADE',
-            //     hooks: true,
-            // });
+            List.belongsTo(models.User, { as: 'ListOwner', foreignKey: 'userId' });
 
             // Polymorphic M:M
             List.belongsToMany(models.Gig, {
@@ -20,10 +13,10 @@ module.exports = (sequelize, DataTypes) => {
                     model: models.Collection,
                     unique: false,
                     scope: {
-                        tag_type: 'GIG',
+                        tagType: 'Gig',
                     },
                 },
-                foreignKey: 'list_id',
+                foreignKey: 'listId',
                 constraints: false,
             });
             List.belongsToMany(models.User, {
@@ -32,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
                     model: models.Collection,
                     unique: false,
                     scope: {
-                        tag_type: 'SELLER',
+                        tagType: 'Seller',
                     },
                 },
-                foreignKey: 'list_id',
+                foreignKey: 'listId',
                 constraints: false,
             });
         }
@@ -66,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 },
             },
-            user_id: {
+            userId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,

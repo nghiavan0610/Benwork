@@ -4,8 +4,8 @@ const { ValidationError } = require('../../helpers/ErrorHandler');
 module.exports = (sequelize, DataTypes) => {
     class UserSkill extends Model {
         static associate(models) {
-            UserSkill.belongsTo(models.User, { foreignKey: 'user_id' });
-            UserSkill.belongsTo(models.Skill, { foreignKey: 'skill_id' });
+            UserSkill.belongsTo(models.User, { foreignKey: 'userId' });
+            UserSkill.belongsTo(models.Skill, { foreignKey: 'skillId' });
         }
     }
     UserSkill.init(
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            user_id: {
+            userId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id',
                 },
             },
-            skill_id: {
+            skillId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
@@ -48,13 +48,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'UserSkill',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_user_skills',
-                    unique: true,
-                    fields: ['user_id', 'skill_id'],
-                },
-            ],
         },
     );
     return UserSkill;

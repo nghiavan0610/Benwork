@@ -6,37 +6,25 @@ const { ValidationError } = require('../../helpers/ErrorHandler');
 module.exports = (sequelize, DataTypes) => {
     class Gig extends Model {
         static associate(models) {
-            Gig.belongsTo(models.User, { as: 'GigOwner', foreignKey: 'seller_id' });
-            Gig.belongsTo(models.GigService, { foreignKey: 'gig_service_id' });
+            Gig.belongsTo(models.User, { as: 'GigOwner', foreignKey: 'sellerId' });
+            Gig.belongsTo(models.GigService, { foreignKey: 'gigServiceId' });
             Gig.hasMany(models.Order, {
                 as: 'GigIsOrderedBy',
                 sourceKey: 'id',
-                foreignKey: 'gig_id',
+                foreignKey: 'gigId',
                 onDelete: 'CASCADE',
                 hooks: true,
             });
-
-            // Polymorphic M:M
-            // Gig.hasMany(models.Collection, {
-            //     as: 'GigIsCollectedBy',
-            //     foreignKey: 'tag_id',
-            //     constraints: false,
-            //     scope: {
-            //         tag_type: 'GIG',
-            //     },
-            //     onDelete: 'CASCADE',
-            //     hooks: true,
-            // });
             Gig.belongsToMany(models.List, {
                 as: 'GigsIsCollectedBy',
                 through: {
                     model: models.Collection,
                     unique: false,
                     scope: {
-                        tag_type: 'GIG',
+                        tagType: 'Gig',
                     },
                 },
-                foreignKey: 'tag_id',
+                foreignKey: 'tagId',
                 constraints: false,
                 onDelete: 'CASCADE',
                 hooks: true,
@@ -44,9 +32,9 @@ module.exports = (sequelize, DataTypes) => {
 
             Gig.hasMany(models.Review, {
                 as: 'ReviewBody',
-                foreignKey: 'tag_id',
+                foreignKey: 'tagId',
                 scope: {
-                    tag_type: 'GIG',
+                    tagType: 'Gig',
                 },
                 constraints: false,
                 onDelete: 'CASCADE',
@@ -71,52 +59,50 @@ module.exports = (sequelize, DataTypes) => {
             },
             image: DataTypes.STRING,
             description: DataTypes.STRING,
-            price_basic: {
+            basicPrice: {
                 type: DataTypes.FLOAT,
                 defaultValue: 0,
                 set(value) {
                     if (!value || value === 'null') {
-                        this.setDataValue('price_basic', 0);
+                        this.setDataValue('basicPrice', 0);
                     } else {
                         if (!parseFloat(value)) {
                             throw new ValidationError(400, 'Wrong price format');
                         }
-                        this.setDataValue('price_basic', parseFloat(value));
+                        this.setDataValue('basicPrice', parseFloat(value));
                     }
                 },
             },
-            about_basic: DataTypes.STRING,
-            price_standard: {
+            basicAbout: DataTypes.STRING,
+            standardPrice: {
                 type: DataTypes.FLOAT,
-                defaultValue: 0,
                 set(value) {
                     if (!value || value === 'null') {
-                        this.setDataValue('price_standard', null);
+                        this.setDataValue('standardPrice', null);
                     } else {
                         if (!parseFloat(value)) {
                             throw new ValidationError(400, 'Wrong price format');
                         }
-                        this.setDataValue('price_standard', parseFloat(value));
+                        this.setDataValue('standardPrice', parseFloat(value));
                     }
                 },
             },
-            about_standard: DataTypes.STRING,
-            price_premium: {
+            standardAbout: DataTypes.STRING,
+            premiumPrice: {
                 type: DataTypes.FLOAT,
-                defaultValue: 0,
                 set(value) {
                     if (!value || value === 'null') {
-                        this.setDataValue('price_premium', null);
+                        this.setDataValue('premiumPrice', null);
                     } else {
                         if (!parseFloat(value)) {
                             throw new ValidationError(400, 'Wrong price format');
                         }
-                        this.setDataValue('price_premium', parseFloat(value));
+                        this.setDataValue('premiumPrice', parseFloat(value));
                     }
                 },
             },
-            about_premium: DataTypes.STRING,
-            seller_id: {
+            premiumAbout: DataTypes.STRING,
+            sellerId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
@@ -125,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
                     key: 'id',
                 },
             },
-            gig_service_id: {
+            gigServiceId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {

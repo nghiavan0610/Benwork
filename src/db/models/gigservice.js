@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             GigService.hasMany(models.Gig, {
                 sourceKey: 'id',
-                foreignKey: 'gig_service_id',
+                foreignKey: 'gigServiceId',
             });
-            GigService.belongsTo(models.GigSubCategory, { foreignKey: 'gig_sub_category_id' });
+            GigService.belongsTo(models.GigSubCategory, { foreignKey: 'gigSubCategoryId' });
         }
     }
     GigService.init(
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
                     },
                 },
             },
-            gig_sub_category_id: {
+            gigSubCategoryId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
@@ -44,13 +44,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'GigService',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_gig_service',
-                    unique: true,
-                    fields: ['name', 'gig_sub_category_id'],
-                },
-            ],
         },
     );
     // Add plugins

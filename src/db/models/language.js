@@ -4,14 +4,9 @@ const SequelizeSlugify = require('sequelize-slugify');
 module.exports = (sequelize, DataTypes) => {
     class Language extends Model {
         static associate(models) {
-            // Language.belongsToMany(models.User, {
-            //     through: models.UserLanguage,
-            //     foreignKey: 'language_id',
-            //     otherKey: 'user_id',
-            // });
             Language.hasMany(models.UserLanguage, {
                 sourceKey: 'id',
-                foreignKey: 'language_id',
+                foreignKey: 'languageId',
             });
         }
     }
@@ -40,13 +35,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Language',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_language_name',
-                    unique: true,
-                    fields: ['name'],
-                },
-            ],
         },
     );
 

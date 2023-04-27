@@ -8,7 +8,7 @@ module.exports = {
             await Promise.all([
                 queryInterface.addColumn(
                     'Users',
-                    'facebook_id',
+                    'facebookId',
                     {
                         type: Sequelize.STRING,
                     },
@@ -16,7 +16,7 @@ module.exports = {
                 ),
                 queryInterface.addColumn(
                     'Users',
-                    'google_id',
+                    'googleId',
                     {
                         type: Sequelize.STRING,
                     },
@@ -32,8 +32,8 @@ module.exports = {
         const transaction = await queryInterface.sequelize.transaction();
         try {
             await Promise.all([
-                queryInterface.removeColumn('Users', 'facebook_id', { transaction }),
-                queryInterface.removeColumn('Users', 'google_id', { transaction }),
+                queryInterface.removeColumn('Users', 'facebookId', { transaction }),
+                queryInterface.removeColumn('Users', 'googleId', { transaction }),
             ]);
             await transaction.commit();
         } catch (err) {

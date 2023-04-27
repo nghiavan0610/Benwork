@@ -19,7 +19,7 @@ module.exports = {
                 name: i == 0 ? 'admin' : `user${i + 1}`,
                 email: i == 0 ? 'admin@gmail.com' : `user${i + 1}@gmail.com`,
                 password: hashedPassword,
-                country_id: CountryID[(Math.random() * CountryID.length) | 0].id,
+                countryId: CountryID[(Math.random() * CountryID.length) | 0].id,
                 member_since: new Date(),
                 updatedAt: new Date(),
                 slug: i == 0 ? 'admin' : `user${i + 1}`,

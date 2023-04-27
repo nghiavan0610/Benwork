@@ -12,15 +12,17 @@ module.exports = {
         const packageArr = ['basic', 'standard', 'premium'];
 
         let data = [];
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 300; i++) {
             data.push({
                 id: i + 1,
                 package: packageArr[(Math.random() * packageArr.length) | 0],
-                is_done: Math.random() < 0.5,
-                order_date: new Date(),
+                isDone: Math.random() < 0.5,
+                quantity: Math.floor(Math.random() * (10 - 1 + 1) + 1),
+                total: Math.floor(Math.random() * (1300 - 1 + 1) + 1),
+                orderDate: new Date(),
                 updatedAt: new Date(),
-                user_id: UserID[(Math.random() * UserID.length) | 0].id,
-                gig_id: GigID[(Math.random() * GigID.length) | 0].id,
+                userId: UserID[(Math.random() * UserID.length) | 0].id,
+                gigId: GigID[(Math.random() * GigID.length) | 0].id,
             });
         }
         await queryInterface.bulkInsert('Orders', data, {});

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             GigCategory.hasMany(models.GigSubCategory, {
                 sourceKey: 'id',
-                foreignKey: 'gig_category_id',
+                foreignKey: 'gigCategoryId',
             });
         }
     }
@@ -35,13 +35,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'GigCategory',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_gig_category_name',
-                    unique: true,
-                    fields: ['name'],
-                },
-            ],
         },
     );
 

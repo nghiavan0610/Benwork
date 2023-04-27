@@ -13,7 +13,7 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER,
                     },
-                    user_id: {
+                    userId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         references: {
@@ -23,7 +23,7 @@ module.exports = {
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    language_id: {
+                    languageId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'Languages',
@@ -35,13 +35,6 @@ module.exports = {
                     level: {
                         type: Sequelize.ENUM('basic', 'conversational', 'fluent', 'native'),
                         defaultValue: 'basic',
-                        set(value) {
-                            if (!value || value === 'null') {
-                                this.setDataValue('level', 'basic');
-                            } else {
-                                this.setDataValue('level', value);
-                            }
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -52,12 +45,6 @@ module.exports = {
                         type: Sequelize.DATE,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'UserLanguages',
-                ['user_id', 'language_id'],
-                { name: 'ix_user_languages', unique: true },
                 { transaction },
             );
             await transaction.commit();

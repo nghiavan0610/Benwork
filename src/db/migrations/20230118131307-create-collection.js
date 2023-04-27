@@ -13,7 +13,7 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER,
                     },
-                    list_id: {
+                    listId: {
                         type: Sequelize.INTEGER,
                         references: {
                             model: 'Lists',
@@ -23,7 +23,7 @@ module.exports = {
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    tag_id: {
+                    tagId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         references: null,
@@ -31,14 +31,8 @@ module.exports = {
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    tag_type: {
-                        type: Sequelize.ENUM('GIG', 'SELLER'),
-                        validate: {
-                            isIn: {
-                                args: [['GIG', 'SELLER']],
-                                msg: 'Unknown item type',
-                            },
-                        },
+                    tagType: {
+                        type: Sequelize.ENUM('Gig', 'Seller'),
                     },
                     createdAt: {
                         allowNull: false,
@@ -53,8 +47,8 @@ module.exports = {
             );
             await queryInterface.addIndex(
                 'Collections',
-                ['list_id', 'tag_id', 'tag_type'],
-                { name: 'ix_collections', unique: true, where: { tag_type: 'GIG' || 'SELLER' } },
+                ['tagId', 'tagType'],
+                { name: 'ix_collections', where: { tagType: 'Gig' || 'Seller' } },
                 { transaction },
             );
             await transaction.commit();

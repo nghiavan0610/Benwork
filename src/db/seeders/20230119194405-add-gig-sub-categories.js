@@ -12,7 +12,7 @@ module.exports = {
 
         const data = GigSubCategories.map((v) => ({
             ...v,
-            gig_category_id: GigCategoryID[(Math.random() * GigCategoryID.length) | 0],
+            gigCategoryId: GigCategoryID[(Math.random() * GigCategoryID.length) | 0],
         }));
         await queryInterface.bulkInsert('GigSubCategories', data, {});
     },

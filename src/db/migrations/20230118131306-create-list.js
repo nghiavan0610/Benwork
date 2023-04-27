@@ -12,23 +12,11 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                validate: {
-                    notEmpty: {
-                        msg: 'Please enter your list name',
-                    },
-                },
             },
             description: {
                 type: Sequelize.STRING,
-                set(value) {
-                    if (!value || value === 'null') {
-                        this.setDataValue('description', null);
-                    } else {
-                        this.setDataValue('description', value);
-                    }
-                },
             },
-            user_id: {
+            userId: {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
                 references: {

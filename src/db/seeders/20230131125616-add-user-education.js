@@ -24,12 +24,12 @@ module.exports = {
                 id: i + 1,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                user_id: userID[(Math.random() * userID.length) | 0].id,
-                university_id: universityID[(Math.random() * universityID.length) | 0].id,
-                major_id: majorID[(Math.random() * majorID.length) | 0].id,
-                country_id: countryID[(Math.random() * countryID.length) | 0].id,
-                title_id: titleID[(Math.random() * titleID.length) | 0].id,
-                year_of_graduation: Math.floor(Math.random() * (2023 - 1960 + 1) + 1960),
+                userId: userID[(Math.random() * userID.length) | 0].id,
+                universityId: universityID[(Math.random() * universityID.length) | 0].id,
+                majorId: majorID[(Math.random() * majorID.length) | 0].id,
+                countryId: countryID[(Math.random() * countryID.length) | 0].id,
+                titleId: titleID[(Math.random() * titleID.length) | 0].id,
+                yearOfGraduation: Math.floor(Math.random() * (2023 - 1960 + 1) + 1960),
             });
         }
 
@@ -39,11 +39,11 @@ module.exports = {
                 index ===
                 self.findIndex(
                     (t) =>
-                        t.user_id === value.user_id &&
-                        t.university_id === value.university_id &&
-                        t.major_id === value.major_id &&
-                        t.country_id === value.country_id &&
-                        t.title_id === value.title_id,
+                        t.userId === value.userId &&
+                        t.universityId === value.universityId &&
+                        t.majorId === value.majorId &&
+                        t.countryId === value.countryId &&
+                        t.titleId === value.titleId,
                 ),
         );
         await queryInterface.bulkInsert('UserEducations', data, {});

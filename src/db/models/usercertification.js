@@ -5,7 +5,7 @@ const { ValidationError } = require('../../helpers/ErrorHandler');
 module.exports = (sequelize, DataTypes) => {
     class UserCertification extends Model {
         static associate(models) {
-            UserCertification.belongsTo(models.User, { foreignKey: 'user_id' });
+            UserCertification.belongsTo(models.User, { foreignKey: 'userId' });
         }
     }
     UserCertification.init(
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            user_id: {
+            userId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
                     },
                 },
             },
-            certificated_from: {
+            certificatedFrom: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -42,11 +42,11 @@ module.exports = (sequelize, DataTypes) => {
                     },
                 },
             },
-            year_of_certification: {
+            yearOfCertification: {
                 type: DataTypes.INTEGER,
                 set(value) {
                     if (!value || value === 'null') {
-                        this.setDataValue('year_of_certification', null);
+                        this.setDataValue('yearOfCertification', null);
                     } else {
                         if (!value.match(/^[0-9]+$/)) {
                             throw new ValidationError(400, 'Wrong year format');
@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
                             );
                         }
 
-                        this.setDataValue('year_of_certification', value);
+                        this.setDataValue('yearOfCertification', value);
                     }
                 },
             },
@@ -76,13 +76,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'UserCertification',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_user_certifications',
-                    unique: true,
-                    fields: ['user_id', 'name', 'certificated_from'],
-                },
-            ],
         },
     );
 

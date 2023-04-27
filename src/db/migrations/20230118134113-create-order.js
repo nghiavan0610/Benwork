@@ -9,7 +9,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            user_id: {
+            userId: {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
                 references: {
@@ -19,7 +19,7 @@ module.exports = {
                 onDelete: 'CASCADE',
                 hooks: true,
             },
-            gig_id: {
+            gigId: {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
                 allowNull: false,
@@ -33,26 +33,23 @@ module.exports = {
             package: {
                 type: Sequelize.ENUM('basic', 'standard', 'premium'),
                 allowNull: false,
-                validate: {
-                    isIn: {
-                        args: [['basic', 'standard', 'premium']],
-                        msg: 'Unknown package type',
-                    },
-                },
             },
-            is_done: {
+            isDone: {
                 type: Sequelize.BOOLEAN,
                 defaultValue: false,
             },
-            order_date: {
+            quantity: {
+                type: Sequelize.INTEGER,
+            },
+            total: {
+                type: Sequelize.FLOAT,
+            },
+            orderDate: {
                 allowNull: false,
                 type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE,
-            },
-            deletedAt: {
                 type: Sequelize.DATE,
             },
         });

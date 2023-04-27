@@ -4,14 +4,9 @@ const SequelizeSlugify = require('sequelize-slugify');
 module.exports = (sequelize, DataTypes) => {
     class Skill extends Model {
         static associate(models) {
-            // Skill.belongsToMany(models.User, {
-            //     through: models.UserSkill,
-            //     foreignKey: 'skill_id',
-            //     otherKey: 'user_id',
-            // });
             Skill.hasMany(models.UserSkill, {
                 sourceKey: 'id',
-                foreignKey: 'skill_id',
+                foreignKey: 'skillId',
             });
         }
     }
@@ -40,13 +35,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Skill',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_skill_name',
-                    unique: true,
-                    fields: ['name'],
-                },
-            ],
         },
     );
 

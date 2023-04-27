@@ -13,7 +13,7 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER,
                     },
-                    user_id: {
+                    userId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         references: {
@@ -24,40 +24,23 @@ module.exports = {
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    tag_id: {
+                    tagId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         constraints: false,
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
-                    tag_type: {
-                        type: Sequelize.ENUM('GIG', 'SELLER'),
-                        validate: {
-                            isIn: {
-                                args: [['GIG', 'SELLER']],
-                                msg: 'Unknown item type',
-                            },
-                        },
+                    tagType: {
+                        type: Sequelize.ENUM('Gig', 'Seller'),
                     },
                     content: {
                         type: Sequelize.STRING,
                     },
                     rating: {
                         type: Sequelize.INTEGER,
-                        set(value) {
-                            if (!value || value === 'null') {
-                                this.setDataValue('rating', null);
-                            } else {
-                                if (parseInt(value) < 1 || parseInt(value) > 5) {
-                                    throw new ValidationError(400, 'Rating must be between 1 and 5');
-                                }
-
-                                this.setDataValue('rating', value);
-                            }
-                        },
                     },
-                    review_date: {
+                    reviewDate: {
                         allowNull: false,
                         type: Sequelize.DATE,
                     },
@@ -70,8 +53,8 @@ module.exports = {
             );
             await queryInterface.addIndex(
                 'Reviews',
-                ['user_id', 'tag_id', 'tag_type'],
-                { name: 'ix_reviews', unique: true, where: { tag_type: 'GIG' || 'SELLER' } },
+                ['tagId', 'tagType'],
+                { name: 'ix_reviews', where: { tagType: 'Gig' || 'Seller' } },
                 { transaction },
             );
             await transaction.commit();

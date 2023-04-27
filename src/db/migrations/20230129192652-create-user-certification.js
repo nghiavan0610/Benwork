@@ -13,7 +13,7 @@ module.exports = {
                         primaryKey: true,
                         type: Sequelize.INTEGER,
                     },
-                    user_id: {
+                    userId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
                         references: {
@@ -27,34 +27,12 @@ module.exports = {
                         type: Sequelize.STRING,
                         allowNull: false,
                     },
-                    certificated_from: {
+                    certificatedFrom: {
                         type: Sequelize.STRING,
                         allowNull: false,
                     },
-                    year_of_certification: {
+                    yearOfCertification: {
                         type: Sequelize.INTEGER,
-                        set(value) {
-                            if (!value || value === 'null') {
-                                this.setDataValue('year_of_certification', null);
-                            } else {
-                                if (!value.match(/^[0-9]+$/)) {
-                                    throw new ValidationError(400, 'Wrong year format');
-                                }
-
-                                if (value.length !== 4) {
-                                    throw new ValidationError(400, 'Year of certification must have 4 characters');
-                                }
-
-                                if (value > new Date().getFullYear()) {
-                                    throw new ValidationError(
-                                        400,
-                                        'Year of certification cannot be greater than present year',
-                                    );
-                                }
-
-                                this.setDataValue('year_of_certification', value);
-                            }
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -69,12 +47,6 @@ module.exports = {
                         unique: true,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'UserCertifications',
-                ['user_id', 'name', 'certificated_from'],
-                { name: 'ix_user_certifications', unique: true },
                 { transaction },
             );
             await transaction.commit();

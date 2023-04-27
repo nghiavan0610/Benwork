@@ -17,8 +17,8 @@ module.exports = {
                 id: i + 1,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                user_id: UserID[(Math.random() * UserID.length) | 0].id,
-                language_id: LanguageID[(Math.random() * LanguageID.length) | 0].id,
+                userId: UserID[(Math.random() * UserID.length) | 0].id,
+                languageId: LanguageID[(Math.random() * LanguageID.length) | 0].id,
                 level: leverArr[(Math.random() * leverArr.length) | 0],
             });
         }
@@ -26,7 +26,7 @@ module.exports = {
         // filter duplicates
         data = data.filter(
             (value, index, self) =>
-                index === self.findIndex((t) => t.user_id === value.user_id && t.language_id === value.language_id),
+                index === self.findIndex((t) => t.userId === value.userId && t.languageId === value.languageId),
         );
         await queryInterface.bulkInsert('UserLanguages', data, {});
     },

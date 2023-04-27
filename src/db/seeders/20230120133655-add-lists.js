@@ -8,7 +8,7 @@ module.exports = {
         const UserID = usersID[0];
         const data = Lists.map((v) => ({
             ...v,
-            user_id: UserID[(Math.random() * UserID.length) | 0].id,
+            userId: UserID[(Math.random() * UserID.length) | 0].id,
         }));
         await queryInterface.bulkInsert('Lists', data, {});
     },

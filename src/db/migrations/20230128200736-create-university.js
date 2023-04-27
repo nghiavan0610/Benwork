@@ -16,11 +16,6 @@ module.exports = {
                     name: {
                         type: Sequelize.STRING,
                         allowNull: false,
-                        validate: {
-                            notEmpty: {
-                                msg: 'Please enter the university name',
-                            },
-                        },
                     },
                     createdAt: {
                         allowNull: false,
@@ -35,12 +30,6 @@ module.exports = {
                         unique: true,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'Universities',
-                ['name'],
-                { name: 'ix_university_name', unique: true },
                 { transaction },
             );
             await transaction.commit();
