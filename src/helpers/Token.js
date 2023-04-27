@@ -1,16 +1,24 @@
-const JWTR = require('jwt-redis').default;
-const { redisClient } = require('../config/redis');
+const jwt = require('jsonwebtoken');
+const config = require('../configs/env');
 
-const config = require('../config/env');
-
-const jwtr = new JWTR(redisClient);
-
-const generateToken = (id) => {
-    return jwtr.sign(id, config.JWT_SECRET, { expiresIn: Number(config.EXPIRE_IN) });
+const generateAccessToken = async (userId) => {
+    return jwt.sign({ userId: userId }, config.ACCESS_TOKEN_SECRET, {
+        expiresIn: Number(config.ACCESS_TOKEN_EXPIRE),
+    });
 };
 
-const deleteToken = (jti) => {
-    return jwtr.destroy(jti, config.JWT_SECRET);
+const generateRefreshToken = async (userId) => {
+    return jwt.sign({ userId: userId }, config.REFRESH_TOKEN_SECRET, {
+        expiresIn: Number(config.REFRESH_TOKEN_EXPIRE),
+    });
 };
 
-module.exports = { jwtr, generateToken, deleteToken };
+const verifyAccessToken = async (token) => {
+    return jwt.verify(token, config.ACCESS_TOKEN_SECRET);
+};
+
+const verifyRefreshToken = async (token) => {
+    return jwt.verify(token, config.REFRESH_TOKEN_SECRET);
+};
+
+module.exports = { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken };
