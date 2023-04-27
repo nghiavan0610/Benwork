@@ -2,61 +2,74 @@ const listsService = require('../services/ListsService');
 const { response } = require('../../helpers/Response');
 
 class ListsController {
-    // [GET] /api/lists
-    async getAllAccountLists(req, res, next) {
+    // [GET] /api/v1/lists
+    async getAllMyLists(req, res, next) {
         try {
             const { id } = req.user;
-            const lists = await listsService.getAllAccountLists(id);
-            res.status(200).json(response(lists));
+            const lists = await listsService.getAllMyLists(id);
+            res.status(200).json(response({ lists }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [GET] /api/lists/:list_id
+    // [GET] /api/v1/lists/:listId
     async getListById(req, res, next) {
         try {
             const { id } = req.user;
-            const { list_id } = req.params;
-            const list = await listsService.getListById(id, list_id);
-            res.status(200).json(response(list));
+            const { listId } = req.params;
+            const list = await listsService.getListById(id, listId);
+            res.status(200).json(response({ list }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [POST] /api/lists/create-list
+    // [POST] /api/v1/lists/create
     async createList(req, res, next) {
         try {
             const { id } = req.user;
             const formData = req.body;
-            const newList = await listsService.createList(id, formData);
-            res.status(201).json(response(newList));
+            const list = await listsService.createList(id, formData);
+            res.status(201).json(response({ list }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [PUT] /api/lists/:list_id
+    // [PUT] /api/v1/lists/:listId
     async editList(req, res, next) {
         try {
             const { id } = req.user;
-            const { list_id } = req.params;
+            const { listId } = req.params;
             const formData = req.body;
-            const newList = await listsService.editList(id, list_id, formData);
-            res.status(201).json(response(newList));
+            const newList = await listsService.editList(id, listId, formData);
+            res.status(201).json(response({ newList }));
         } catch (err) {
             next(err);
         }
     }
 
-    // [DELETE] /api/lists/:list_id
+    // [DELETE] /api/v1/lists/:listId
     async deleteList(req, res, next) {
         try {
             const { id } = req.user;
-            const { list_id } = req.params;
-            await listsService.deleteList(id, list_id);
+            const { listId } = req.params;
+            await listsService.deleteList(id, listId);
             res.status(200).json(response());
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    // [POST] /api/v1/list/:listId/save-item
+    async saveItemToList(req, res, next) {
+        try {
+            const { id } = req.user;
+            const formData = req.body;
+            const { listId } = req.params;
+            const savedItem = await listsService.saveItemToList(id, listId, formData);
+            res.status(201).json(response({ [formData.tagType]: savedItem }));
         } catch (err) {
             next(err);
         }

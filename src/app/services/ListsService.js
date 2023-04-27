@@ -2,8 +2,8 @@ const { ApiError } = require('../../helpers/ErrorHandler');
 const { sequelize, User, Gig, List, Country } = require('../../db/models');
 
 class ListsService {
-    // [GET] /api/lists
-    async getAllAccountLists(id) {
+    // [GET] /api/v1/lists
+    async getAllMyLists(id) {
         try {
             const lists = await List.findAll({
                 attributes: [
@@ -13,13 +13,13 @@ class ListsService {
                     'slug',
                     [
                         sequelize.literal(
-                            `(select count(*) from Collections where Collections.list_id = List.id and Collections.tag_type = "GIG")`,
+                            `(select count(*) from Collections where Collections.listId = List.id and Collections.tagType = "Gig")`,
                         ),
                         'total_gigs',
                     ],
                     [
                         sequelize.literal(
-                            `(select count(*) from Collections where Collections.list_id = List.id and Collections.tag_type = "SELLER")`,
+                            `(select count(*) from Collections where Collections.listId = List.id and Collections.tagType = "Seller")`,
                         ),
                         'total_sellers',
                     ],
@@ -42,7 +42,7 @@ class ListsService {
                         },
                     },
                 ],
-                where: { user_id: id },
+                where: { userId: id },
             });
             return lists;
         } catch (err) {
@@ -50,43 +50,47 @@ class ListsService {
         }
     }
 
-    // [GET] /api/lists/:list_id
-    async getListById(id, list_id) {
+    // [GET] /api/v1/lists/:listId
+    async getListById(id, listId) {
         try {
             const list = await List.findOne({
-                attributes: {
-                    include: [
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Collections where Collections.list_id = List.id and Collections.tag_type = "GIG")`,
-                            ),
-                            'total_gigs',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Collections where Collections.list_id = List.id and Collections.tag_type = "SELLER")`,
-                            ),
-                            'total_sellers',
-                        ],
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'slug',
+                    'createdAt',
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Collections where Collections.listId = List.id and Collections.tagType = "Gig")`,
+                        ),
+                        'total_gigs',
                     ],
-                },
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Collections where Collections.listId = List.id and Collections.tagType = "Seller")`,
+                        ),
+                        'total_sellers',
+                    ],
+                ],
+
                 include: [
                     {
                         attributes: [
                             'id',
                             'name',
                             'image',
-                            'price_basic',
+                            'basicPrice',
                             'slug',
                             [
                                 sequelize.literal(
-                                    `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = CollectGigs.id and Reviews.tag_type = "GIG")`,
+                                    `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tagId = CollectGigs.id and Reviews.tagType = "Gig")`,
                                 ),
                                 'gig_review_rating',
                             ],
                             [
                                 sequelize.literal(
-                                    `(select count(*) from Reviews where Reviews.tag_id = CollectGigs.id and Reviews.tag_type = "GIG")`,
+                                    `(select count(*) from Reviews where Reviews.tagId = CollectGigs.id and Reviews.tagType = "Gig")`,
                                 ),
                                 'gig_review_count',
                             ],
@@ -115,13 +119,13 @@ class ListsService {
                             'member_since',
                             [
                                 sequelize.literal(
-                                    `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = CollectSellers.id and Reviews.tag_type = "SELLER")`,
+                                    `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tagId = CollectSellers.id and Reviews.tagType = "Seller")`,
                                 ),
                                 'seller_review_rating',
                             ],
                             [
                                 sequelize.literal(
-                                    `(select count(*) from Reviews where Reviews.tag_id = CollectSellers.id and Reviews.tag_type = "SELLER")`,
+                                    `(select count(*) from Reviews where Reviews.tagId = CollectSellers.id and Reviews.tagType = "Seller")`,
                                 ),
                                 'seller_review_count',
                             ],
@@ -137,45 +141,37 @@ class ListsService {
                         },
                     },
                 ],
-                where: { id: list_id, user_id: id },
+                where: { id: listId, userId: id },
             });
-            if (!list) {
-                throw new ApiError(404, `List with id='${list_id}' was not found or not your list`);
-            }
+            if (!list) throw new ApiError(404, `List '${listId}' was not found or not your list`);
+
             return list;
         } catch (err) {
             throw err;
         }
     }
 
-    // [POST] /api/lists/create-list
+    // [POST] /api/v1/lists/create
     async createList(id, formData) {
         try {
-            const { list_name, list_description } = formData;
-            const newList = await List.create({
-                name: list_name,
-                description: list_description,
-                user_id: id,
+            const { name, description } = formData;
+            const list = await List.create({
+                name,
+                description,
+                userId: id,
             });
-            return newList;
+            return list;
         } catch (err) {
             throw err;
         }
     }
 
-    // [PUT] /api/lists/:list_id
-    async editList(id, list_id, formData) {
+    // [PUT] /api/v1/lists/:listId
+    async editList(id, listId, formData) {
         try {
-            const { list_name, list_description } = formData;
-            const newList = await List.update(
-                {
-                    name: list_name,
-                    description: list_description,
-                },
-                { where: { id: list_id, user_id: id } },
-            );
+            const newList = await List.update(formData, { where: { id: listId, userId: id } });
             if (!newList[0] && !newList[1][0]) {
-                throw new ApiError(404, `List with id='${list_id}' was not found or not your list`);
+                throw new ApiError(404, `List '${listId}' was not found or not your list`);
             }
             return newList[1][0];
         } catch (err) {
@@ -183,13 +179,48 @@ class ListsService {
         }
     }
 
-    // [DELETE] /api/lists/:list_id
-    async deleteList(id, list_id) {
+    // [DELETE] /api/v1/lists/:listId
+    async deleteList(id, listId) {
         try {
-            const deleted = await List.destroy({ where: { id: list_id, user_id: id } });
+            const deleted = await List.destroy({ where: { id: listId, userId: id } });
             if (!deleted) {
-                throw new ApiError(404, `List with id='${list_id}' was not found or not your list`);
+                throw new ApiError(404, `List '${listId}' was not found or not your list`);
             }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // [POST] /api/v1/lists/:listId/save-item
+    async saveItemToList(id, listId, formData) {
+        try {
+            const { tagId, tagType } = formData;
+
+            if (!(tagType === 'Gig' || tagType === 'Seller')) {
+                throw new ApiError(403, `Unknow tag type item: '${tagType}'`);
+            }
+            const [list, item] = await Promise.all([
+                List.findByPk(listId, { attributes: ['id', 'userId'] }),
+                tagType === 'Gig'
+                    ? Gig.findByPk(tagId, { attributes: ['id'] })
+                    : User.findOne({ attributes: ['id'], where: { id: tagId, role: 'seller' } }),
+            ]);
+
+            if (!list) throw new ApiError(404, `List '${listId}' was not found`);
+            if (list.userId !== id) throw new ApiError(401, `1 permission to perform this action`);
+
+            if (!item) throw new ApiError(404, `${tagType} '${tagId}' was not found`);
+
+            const [savedItem, created] = await Collection.findOrCreate({
+                where: { listId, tagId, tagType },
+                defaults: {},
+            });
+            if (!created) {
+                await savedItem.destroy();
+                return;
+            }
+
+            return savedItem;
         } catch (err) {
             throw err;
         }
