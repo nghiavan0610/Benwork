@@ -12,35 +12,45 @@ const {
     Review,
     Country,
 } = require('../../db/models');
-const { gigFilterClause, userFilterClause } = require('../../helpers/FilterClause');
+const { gigFilterClause } = require('../../helpers/FilterClause');
 
 class GigsService {
-    // [GET] /api/gigs
+    // [GET] /api/v1/gigs
     async getAllGigs(queryData) {
         try {
             const { where, order, page, offset, limit } = gigFilterClause(queryData);
 
             const gigs = await Gig.findAndCountAll({
-                attributes: {
-                    include: [
-                        [
-                            sequelize.literal(`(select count(*) from Orders where Orders.gig_id = Gig.id)`),
-                            'gig_selling_quantity',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_rating',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_count',
-                        ],
+                attributes: [
+                    'id',
+                    'name',
+                    'image',
+                    'description',
+                    'basicPrice',
+                    'basicAbout',
+                    'standardPrice',
+                    'standardAbout',
+                    'premiumPrice',
+                    'premiumAbout',
+                    'slug',
+                    'createdAt',
+                    [
+                        sequelize.literal(`(select count(*) from Orders where Orders.gigId = Gig.id)`),
+                        'gig_selling_quantity',
                     ],
-                },
+                    [
+                        sequelize.literal(
+                            `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig")`,
+                        ),
+                        'review_rating',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig")`,
+                        ),
+                        'review_count',
+                    ],
+                ],
                 include: [
                     {
                         attributes: ['id', 'name', 'avatarUrl', 'slug'],
@@ -86,60 +96,70 @@ class GigsService {
         }
     }
 
-    // [GET] /api/gigs/:gig_slug
-    async getGigBySlug(gig_slug) {
+    // [GET] /api/v1/gigs/:gigSlug
+    async getGigBySlug(gigSlug) {
         try {
             const gig = await Gig.findOne({
-                attributes: {
-                    include: [
-                        [
-                            sequelize.literal(`(select count(*) from Orders where Orders.gig_id = Gig.id)`),
-                            'gig_selling_quantity',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'gig_review_rating',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'gig_total_review',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG" and Reviews.rating = 5)`,
-                            ),
-                            'gig_review_5_count',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG" and Reviews.rating = 4)`,
-                            ),
-                            'gig_review_4_count',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG" and Reviews.rating = 3)`,
-                            ),
-                            'gig_review_3_count',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG" and Reviews.rating = 2)`,
-                            ),
-                            'gig_review_2_count',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG" and Reviews.rating = 1)`,
-                            ),
-                            'gig_review_1_count',
-                        ],
+                attributes: [
+                    'id',
+                    'name',
+                    'image',
+                    'description',
+                    'basicPrice',
+                    'basicAbout',
+                    'standardPrice',
+                    'standardAbout',
+                    'premiumPrice',
+                    'premiumAbout',
+                    'slug',
+                    'createdAt',
+                    [
+                        sequelize.literal(`(select count(*) from Orders where Orders.gigId = Gig.id)`),
+                        'gig_selling_quantity',
                     ],
-                },
+                    [
+                        sequelize.literal(
+                            `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig")`,
+                        ),
+                        'gig_review_rating',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig")`,
+                        ),
+                        'gig_total_review',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig" and Reviews.rating = 5)`,
+                        ),
+                        'gig_review_5_count',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig" and Reviews.rating = 4)`,
+                        ),
+                        'gig_review_4_count',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig" and Reviews.rating = 3)`,
+                        ),
+                        'gig_review_3_count',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig" and Reviews.rating = 2)`,
+                        ),
+                        'gig_review_2_count',
+                    ],
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Reviews where Reviews.tagId = Gig.id and Reviews.tagType = "Gig" and Reviews.rating = 1)`,
+                        ),
+                        'gig_review_1_count',
+                    ],
+                ],
                 include: [
                     {
                         attributes: [
@@ -149,14 +169,14 @@ class GigsService {
                             'slug',
                             [
                                 sequelize.literal(
-                                    `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = GigOwner.id and Reviews.tag_type = "SELLER")`,
+                                    `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tagId = GigOwner.id and Reviews.tagType = "Seller")`,
                                 ),
                                 'seller_review_rating',
                             ],
 
                             [
                                 sequelize.literal(
-                                    `(select count(*) from Reviews where Reviews.tag_id = GigOwner.id and Reviews.tag_type = "SELLER")`,
+                                    `(select count(*) from Reviews where Reviews.tagId = GigOwner.id and Reviews.tagType = "Seller")`,
                                 ),
                                 'seller_total_review',
                             ],
@@ -191,7 +211,7 @@ class GigsService {
                         },
                     },
                     {
-                        attributes: ['id', 'rating', 'content', 'review_date'],
+                        attributes: ['id', 'rating', 'content', 'reviewDate'],
                         model: Review,
                         as: 'ReviewBody',
                         include: {
@@ -201,10 +221,11 @@ class GigsService {
                         },
                     },
                 ],
-                where: { slug: gig_slug },
+                where: { slug: gigSlug },
+                order: [['ReviewBody', 'reviewDate', 'DESC']],
             });
             if (!gig) {
-                throw new ApiError(404, `Gig with slug='${gig_slug}' was not found`);
+                throw new ApiError(404, `Gig with slug='${gigSlug}' was not found`);
             }
             return gig;
         } catch (err) {
@@ -212,256 +233,59 @@ class GigsService {
         }
     }
 
-    // [GET] /api/gigs/categories/:category_slug
-    async getAllCategoryGigs(category_slug) {
+    // [POST] /api/v1/gigs/create
+    async createGig(authUser, formData) {
         try {
-            const gigs = await Gig.findAll({
-                attributes: {
-                    include: [
-                        [
-                            sequelize.literal(
-                                `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_rating',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_count',
-                        ],
-                    ],
-                },
-                include: [
-                    {
-                        attributes: ['id', 'name', 'avatarUrl', 'slug'],
-                        model: User,
-                        as: 'GigOwner',
-                        include: {
-                            attributes: ['id', 'name'],
-                            model: Country,
-                        },
-                    },
-                    {
-                        attributes: ['id', 'name'],
-                        model: GigService,
-                        include: {
-                            attributes: ['id', 'name'],
-                            model: GigSubCategory,
-                            include: {
-                                attributes: ['id', 'name'],
-                                model: GigCategory,
-                            },
-                        },
-                    },
-                ],
-                order: [
-                    ['review_rating', 'DESC'],
-                    ['review_count', 'DESC'],
-                    ['createdAt', 'DESC'],
-                ],
-                where: { ['$GigService.GigSubCategory.GigCategory.slug$']: category_slug },
-            });
-            return gigs;
-        } catch (err) {
-            throw err;
-        }
-    }
+            const { gigServiceId, gigSubCategoryId, gigCategoryId, ...gigData } = formData;
 
-    // [GET] /api/gigs/sub_categories/:sub_category_slug
-    async getAllSubCategoryGigs(sub_category_slug) {
-        try {
-            const gigs = await Gig.findAll({
-                attributes: {
-                    include: [
-                        [
-                            sequelize.literal(
-                                `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_rating',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_count',
-                        ],
-                    ],
-                },
-                include: [
-                    {
-                        attributes: ['id', 'name', 'avatarUrl', 'slug'],
-                        model: User,
-                        as: 'GigOwner',
-                        include: {
-                            attributes: ['id', 'name'],
-                            model: Country,
-                        },
-                    },
-                    {
-                        attributes: ['id', 'name'],
-                        model: GigService,
-                        include: {
-                            attributes: ['id', 'name'],
-                            model: GigSubCategory,
-                            include: {
-                                attributes: ['id', 'name'],
-                                model: GigCategory,
-                            },
-                        },
-                    },
-                ],
-                order: [
-                    ['review_rating', 'DESC'],
-                    ['review_count', 'DESC'],
-                    ['createdAt', 'DESC'],
-                ],
-                where: { ['$GigService.GigSubCategory.slug$']: sub_category_slug },
-            });
-            return gigs;
-        } catch (err) {
-            throw err;
-        }
-    }
+            if (authUser.role !== 'seller') throw new ApiError(406, 'You need to be a seller first');
 
-    // [GET] /api/gigs/services/:service_slug
-    async getAllServiceGigs(service_slug) {
-        try {
-            const gigs = await Gig.findAll({
-                attributes: {
-                    include: [
-                        [
-                            sequelize.literal(
-                                `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_rating',
-                        ],
-                        [
-                            sequelize.literal(
-                                `(select count(*) from Reviews where Reviews.tag_id = Gig.id and Reviews.tag_type = "GIG")`,
-                            ),
-                            'review_count',
-                        ],
-                    ],
-                },
-                include: [
-                    {
-                        attributes: ['id', 'name', 'avatarUrl', 'slug'],
-                        model: User,
-                        as: 'GigOwner',
-                        include: {
-                            attributes: ['id', 'name'],
-                            model: Country,
-                        },
-                    },
-                    {
-                        attributes: ['id', 'name'],
-                        model: GigService,
-                        include: {
-                            attributes: ['id', 'name'],
-                            model: GigSubCategory,
-                            include: {
-                                attributes: ['id', 'name'],
-                                model: GigCategory,
-                            },
-                        },
-                    },
-                ],
-                order: [
-                    ['review_rating', 'DESC'],
-                    ['review_count', 'DESC'],
-                    ['createdAt', 'DESC'],
-                ],
-                where: { ['$GigService.slug$']: service_slug },
-            });
-            return gigs;
-        } catch (err) {
-            throw err;
-        }
-    }
+            const gigCategory = await GigCategory.findByPk(gigCategoryId, { attributes: ['id', 'name'] });
+            if (!gigCategory) throw new ApiError(404, `Gig category '${gigCategoryId}' was not found`);
 
-    // [POST] /api/gigs/create-gig
-    async createGig(id, formData) {
-        try {
-            const {
-                name,
-                description,
-                price_basic,
-                about_basic,
-                price_standard,
-                about_standard,
-                price_premium,
-                about_premium,
-                gig_service_name,
-                gig_sub_category_name,
-                gig_category_name,
-            } = formData;
-            const [seller, gigCategory] = await Promise.all([
-                User.findOne({ where: { id, role: 'seller' } }),
-                GigCategory.findOne({ where: { name: gig_category_name } }),
-            ]);
-            if (!seller) {
-                throw new ApiError(406, 'You need to be a seller first');
-            }
-            if (!gigCategory) {
-                throw new ApiError(406, `Gig category '${gig_category_name}' was not found`);
-            }
-
-            const gigSubCategory = await GigSubCategory.findOne({
-                where: {
-                    gig_category_id: gigCategory.id,
-                    name: gig_sub_category_name,
-                },
+            const gigSubCategory = await GigSubCategory.findAll({
+                attributes: ['id', 'name'],
+                where: { id: gigSubCategoryId, gigCategoryId },
+                limit: 1,
             });
-            if (!gigSubCategory) {
+            if (!gigSubCategory[0]) {
                 throw new ApiError(
                     406,
-                    `Gig sub_category '${gig_sub_category_name}' was not found or not in '${gig_category_name}' category`,
+                    `Gig sub_category '${gigSubCategoryId}' was not found or not in Category ${gigCategoryId}`,
                 );
             }
 
-            const gigService = await GigService.findOne({
-                where: {
-                    gig_sub_category_id: gigSubCategory.id,
-                    name: gig_service_name,
-                },
+            const gigService = await GigService.findAll({
+                attributes: ['id', 'name'],
+                where: { id: gigServiceId, gigSubCategoryId },
+                limit: 1,
             });
-            if (!gigService) {
+            if (!gigService[0]) {
                 throw new ApiError(
                     406,
-                    `Gig service '${gig_service_name}' was not found or not in '${gig_sub_category_name}' sub_category`,
+                    `Gig service '${gigServiceId}' was not found or not in Sub_category ${gigSubCategoryId}`,
                 );
             }
 
-            const newGig = await Gig.create({
-                name,
-                description,
-                price_basic,
-                about_basic,
-                price_standard,
-                about_standard,
-                price_premium,
-                about_premium,
-                seller_id: seller.id,
-                gig_service_id: gigService.id,
+            const gig = await Gig.create({
+                ...gigData,
+                sellerId: authUser.id,
+                gigServiceId,
             });
 
-            return newGig;
+            return gig;
         } catch (err) {
             throw err;
         }
     }
 
-    // [POST] /api/gigs/:gig_slug/upload-gig-image
-    async uploadGigImage(id, gig_slug, image) {
+    // [POST] /api/v1/gigs/:gigSlug/upload-image
+    async uploadGigImage(authUser, gigSlug, image) {
         try {
-            const gig = await Gig.findOne({
-                where: { slug: gig_slug, seller_id: id },
-            });
-
-            if (!gig) {
-                throw new ApiError(404, `Gig with slug='${gig_slug}' was not found or not your gig`);
-            }
+            const gig = await Gig.findOne({ attributes: ['id', 'sellerId', 'image'], where: { slug: gigSlug } });
+            if (!gig) throw new ApiError(404, `Gig '${gigSlug}' was not found`);
+            if (gig.sellerId !== authUser.id)
+                throw new ApiError(401, `You do not have permission to perform this action`);
 
             if (gig.image) {
                 const decodedUrl = decodeURI(gig.image);
@@ -470,93 +294,75 @@ class GigsService {
                 await cloudinary.uploader.destroy(imageFileName);
             }
 
-            const newGigImage = await gig.update({ image });
-            return newGigImage;
+            const gigImage = await gig.update({ image });
+            return gigImage;
         } catch (err) {
             throw err;
         }
     }
 
-    // [PUT] /api/gigs/:gig_slug/edit
-    async editGig(id, gig_slug, formData) {
+    // [PUT] /api/v1/gigs/:gigSlug/edit
+    async editGig(authUser, gigSlug, formData) {
         try {
-            const {
-                name,
-                description,
-                price_basic,
-                about_basic,
-                price_standard,
-                about_standard,
-                price_premium,
-                about_premium,
-                gig_service_name,
-                gig_sub_category_name,
-                gig_category_name,
-            } = formData;
-            const gigCategory = await GigCategory.findOne({ where: { name: gig_category_name } });
-            if (!gigCategory) {
-                throw new ApiError(406, `Gig category '${gig_category_name}' was not found`);
-            }
+            const { gigServiceId, gigSubCategoryId, gigCategoryId, ...gigData } = formData;
 
-            const gigSubCategory = await GigSubCategory.findOne({
-                where: {
-                    gig_category_id: gigCategory.id,
-                    name: gig_sub_category_name,
-                },
+            const gig = await Gig.findOne({ attributes: ['id', 'sellerId'], where: { slug: gigSlug } });
+            if (!gig) throw new ApiError(404, `Gig ${gigSlug} was not found`);
+            if (authUser.role !== 'admin' && gig.sellerId !== authUser.id)
+                throw new ApiError(401, `You do not have permission to perform this action!`);
+
+            const gigCategory = await GigCategory.findByPk(gigCategoryId, { attributes: ['id', 'name'] });
+            if (!gigCategory) throw new ApiError(404, `Gig category '${gigCategoryId}' was not found`);
+
+            const gigSubCategory = await GigSubCategory.findAll({
+                attributes: ['id', 'name'],
+                where: { id: gigSubCategoryId, gigCategoryId },
+                limit: 1,
             });
-            if (!gigSubCategory) {
+            if (!gigSubCategory[0]) {
                 throw new ApiError(
                     406,
-                    `Gig sub_category '${gig_sub_category_name}' was not found or not in '${gig_category_name}' category`,
+                    `Gig sub_category '${gigSubCategoryId}' was not found or not in Category ${gigCategoryId}`,
                 );
             }
 
-            const gigService = await GigService.findOne({
-                where: {
-                    gig_sub_category_id: gigSubCategory.id,
-                    name: gig_service_name,
-                },
+            const gigService = await GigService.findAll({
+                attributes: ['id', 'name'],
+                where: { id: gigServiceId, gigSubCategoryId },
+                limit: 1,
             });
-            if (!gigService) {
+            if (!gigService[0]) {
                 throw new ApiError(
                     406,
-                    `Gig service '${gig_service_name}' was not found or not in '${gig_sub_category_name}' sub_category`,
+                    `Gig service '${gigServiceId}' was not found or not in Sub_category ${gigSubCategoryId}`,
                 );
             }
 
-            const newGig = await Gig.update(
-                {
-                    name,
-                    description,
-                    price_basic,
-                    about_basic,
-                    price_standard,
-                    about_standard,
-                    price_premium,
-                    about_premium,
-                    gig_service_id: gigService.id,
-                },
-                { where: { slug: gig_slug, seller_id: id } },
-            );
+            await gig.update({
+                ...gigData,
+                gigServiceId,
+            });
 
-            if (!newGig[0] && !newGig[1][0]) {
-                throw new ApiError(404, `Gig with slug='${gig_slug}' was not found or not your Gig`);
-            }
-            return newGig[1][0];
+            return gig;
         } catch (err) {
             throw err;
         }
     }
 
-    // [DELETE] /api/gigs/:gig_id/delete
-    async deleteGig(id, gig_slug, formData) {
+    // [DELETE] /api/v1/gigs/:gigId/delete
+    async deleteGig(id, gigSlug, formData) {
         try {
             const { confirmPassword } = formData;
-            const user = await User.findByPk(id, { attributes: ['id', 'password'] });
+            const [user, gig] = await Promise.all([
+                User.findByPk(id, { attributes: ['id', 'password'] }),
+                Gig.findOne({ attributes: ['id', 'sellerId'], where: { slug: gigSlug } }),
+            ]);
 
-            if (user && user.matchPassword(confirmPassword)) {
-                const deleted = await Gig.destroy({ where: { slug: gig_slug, seller_id: id }, force: true });
-                if (!deleted) throw new ApiError(404, `Gig with slug='${gig_slug}' not found or not your Gig`);
+            if (!gig) throw new ApiError(404, `Gig '${gigSlug}' was not found`);
+            if (gig.sellerId !== id) throw new ApiError(401, `You do not have permission to perform this action`);
+
+            if (user && user.comparePassword(confirmPassword)) {
+                await gig.destroy({ force: true });
             } else {
                 throw new ApiError(406, 'Wrong password');
             }
@@ -565,15 +371,15 @@ class GigsService {
         }
     }
 
-    // [DELETE] /api/gigs/:gig_slug/force-delete
-    async adminDeleteGig(id, gig_slug, formData) {
+    // [DELETE] /api/v1/gigs/:gigSlug/admin-delete
+    async adminDeleteGig(id, gigSlug, formData) {
         try {
             const { adminPassword } = formData;
             const admin = await User.findByPk(id, { attributes: ['id', 'password'] });
 
-            if (admin && admin.matchPassword(adminPassword)) {
-                const deleted = await Gig.destroy({ where: { slug: gig_slug }, force: true });
-                if (!deleted) throw new ApiError(404, `Gig with slug='${gig_slug}' was not found`);
+            if (admin && admin.comparePassword(adminPassword)) {
+                const deleted = await Gig.destroy({ where: { slug: gigSlug }, force: true });
+                if (!deleted) throw new ApiError(404, `Gig with slug='${gigSlug}' was not found`);
             } else {
                 throw new ApiError(406, 'Wrong password');
             }
