@@ -38,6 +38,7 @@
         "sequelize": "^6.31.0",
         "sequelize-cli": "^6.6.0",
         "sequelize-slugify": "^1.6.2",
+        "swagger-autogen": "^2.23.1",
         "swagger-ui-express": "^4.6.2",
         "yamljs": "^0.3.0",
         "yarn": "^1.22.19"

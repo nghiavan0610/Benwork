@@ -8,6 +8,11 @@ class UsersController {
     async getAllUsers(req, res, next) {
         try {
             const queryData = req.query;
+            /*  #swagger.parameters['obj','test'] = {
+                in: 'query',
+                type: 'array',
+                description: 'Some description...',
+        } */
             const users = await usersService.getAllUsers(queryData);
             res.status(200).json(response(users));
         } catch (err) {
@@ -86,7 +91,7 @@ class UsersController {
         }
     }
 
-    // [DELETE] /api/v1/users/deleted_users/:userSlug/handle-delete-user
+    // [PUT] /api/v1/users/deleted_users/:userSlug/handle-delete-user
     async handleDeletedUser(req, res, next) {
         try {
             const { id } = req.user;

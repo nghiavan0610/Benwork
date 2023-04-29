@@ -7,7 +7,7 @@ const requireRole = require('../../middlewares/RoleMiddleware');
 // admin handle users
 router.post('/create', authenticateToken, requireRole('admin'), usersController.createUser);
 router.get('/deleted_users', authenticateToken, requireRole('admin'), usersController.getDeletedUser);
-router.delete(
+router.put(
     '/deleted_users/:userSlug/handle-delete-user',
     authenticateToken,
     requireRole('admin'),

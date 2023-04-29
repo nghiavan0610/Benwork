@@ -45,31 +45,12 @@ class AuthController {
     async createNewAccessToken(req, res, next) {
         try {
             const { authorization } = req.headers;
-            const refreshToken = authorization.split(' ')[1];
-            const accessToken = await authService.createNewAccessToken(refreshToken);
+            const accessToken = await authService.createNewAccessToken(authorization);
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 maxAge: config.ACCESS_TOKEN_EXPIRE * 1000,
             });
             res.status(201).json(response({ accessToken }));
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    // [GET] /api/auth/signout
-    async signout(req, res, next) {
-        try {
-            if (req.jti) {
-                await deleteToken(req.jti);
-                res.cookie('jwt', '', { maxAge: '1' });
-            } else {
-                req.logout((err) => {
-                    return next(err);
-                });
-            }
-
-            res.status(200).json(response(`You've been logged out`));
         } catch (err) {
             next(err);
         }

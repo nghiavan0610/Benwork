@@ -407,7 +407,7 @@ class UsersService {
         }
     }
 
-    // [DELETE] /api/v1/users/deleted_users/handle-deleted-user
+    // [PUT] /api/v1/users/deleted_users/handle-deleted-user
     async handleDeletedUser(id, userSlug, formData) {
         try {
             const { adminPassword, method } = formData;

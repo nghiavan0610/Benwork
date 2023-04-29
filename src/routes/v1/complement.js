@@ -4,10 +4,9 @@ const complementController = require('../../app/controllers/ComplementController
 const { authenticateToken } = require('../../middlewares/AuthMiddleware');
 const requireRole = require('../../middlewares/RoleMiddleware');
 
-// skills
+router.put('/:typeSlug/edit', authenticateToken, requireRole('admin'), complementController.editComplement);
+router.delete('/:typeSlug/delete', authenticateToken, requireRole('admin'), complementController.deleteComplement);
 router.post('/create', authenticateToken, requireRole('admin'), complementController.createComplement);
-router.put('/edit', authenticateToken, requireRole('admin'), complementController.editComplement);
-router.delete('/delete', authenticateToken, requireRole('admin'), complementController.deleteComplement);
 router.get('/:typeSlug', authenticateToken, complementController.getComplementBySlug);
 router.get('/', authenticateToken, complementController.getAllComplements);
 

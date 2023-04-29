@@ -59,8 +59,11 @@ class AuthService {
     }
 
     // [POST] /api/v1/auth/refresh-token
-    async createNewAccessToken(refreshToken) {
+    async createNewAccessToken(authorization) {
         try {
+            if (!authorization) throw new ApiError(401, 'Invalid authorization');
+            const refreshToken = authorization.split(' ')[1];
+
             if (!refreshToken) throw new ApiError(401, 'Refesh Token was not found');
 
             const decoded = await verifyRefreshToken(refreshToken);

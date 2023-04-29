@@ -8,8 +8,7 @@ const uploadCloud = require('../../middlewares/UploadMiddleware');
 router.post('/create', authenticateToken, gigsController.createGig);
 router.post('/:gigSlug/upload-image', authenticateToken, uploadCloud.single('image'), gigsController.uploadGigImage);
 router.put('/:gigSlug/edit', authenticateToken, gigsController.editGig);
-router.delete('/:gigSlug/delete', authenticateToken, gigsController.deleteGig);
-router.delete('/:gigSlug/admin-delete', authenticateToken, requireRole('admin'), gigsController.adminDeleteGig);
+router.put('/:gigSlug/delete', authenticateToken, gigsController.deleteGig);
 
 router.get('/:gigSlug', gigsController.getGigBySlug);
 router.get('/', gigsController.getAllGigs);

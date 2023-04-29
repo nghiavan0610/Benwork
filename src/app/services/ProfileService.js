@@ -34,7 +34,7 @@ class ProfileService {
         }
     }
 
-    // [DELETE] /api/v1/profile/deactivate
+    // [PUT] /api/v1/profile/deactivate
     async deactivateAccount(id, formData) {
         try {
             const { confirmPassword } = formData;

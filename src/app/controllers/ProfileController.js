@@ -21,7 +21,7 @@ class ProfileController {
         }
     }
 
-    // [DELETE] /api/profile/deactivate
+    // [PUT] /api/profile/deactivate
     async deactivateAccount(req, res, next) {
         try {
             const { id } = req.user;

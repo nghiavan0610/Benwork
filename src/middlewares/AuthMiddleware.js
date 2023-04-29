@@ -34,7 +34,10 @@ const authenticateToken = async (req, res, next) => {
         next();
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
-            next(new ApiError(401, 'Access token has been time out'));
+            next(new ApiError(401, 'Token has been time out'));
+        }
+        if (err.name === 'JsonWebTokenError') {
+            next(new ApiError(401, 'Invalid Token'));
         }
         next(err);
     }

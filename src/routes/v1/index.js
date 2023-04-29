@@ -3,22 +3,18 @@ const v1Router = express.Router();
 const authRouter = require('./auth');
 const usersRouter = require('./users');
 const profileRouter = require('./profile');
-// const settingRouter = require('./setting');
 const gigsRouter = require('./gigs');
 const listsRouter = require('./lists');
 const ordersRouter = require('./orders');
-// const searchRouter = require('./search');
 const complementRouter = require('./complement');
 const categoriesRouter = require('./categories');
 
 v1Router.use('/auth', authRouter);
 v1Router.use('/users', usersRouter);
 v1Router.use('/profile', profileRouter);
-// v1Router.use('/setting', settingRouter);
 v1Router.use('/gigs', gigsRouter);
 v1Router.use('/lists', listsRouter);
 v1Router.use('/orders', ordersRouter);
-// v1Router.use('/search', searchRouter);
 v1Router.use('/complement', complementRouter);
 v1Router.use('/categories', categoriesRouter);
 

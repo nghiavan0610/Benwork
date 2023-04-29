@@ -349,37 +349,22 @@ class GigsService {
         }
     }
 
-    // [DELETE] /api/v1/gigs/:gigId/delete
-    async deleteGig(id, gigSlug, formData) {
+    // [PUT] /api/v1/gigs/:gigSlug/delete
+    async deleteGig(authUser, gigSlug, formData) {
         try {
             const { confirmPassword } = formData;
             const [user, gig] = await Promise.all([
-                User.findByPk(id, { attributes: ['id', 'password'] }),
+                User.findByPk(authUser.id, { attributes: ['id', 'password'] }),
                 Gig.findOne({ attributes: ['id', 'sellerId'], where: { slug: gigSlug } }),
             ]);
 
             if (!gig) throw new ApiError(404, `Gig '${gigSlug}' was not found`);
-            if (gig.sellerId !== id) throw new ApiError(401, `You do not have permission to perform this action`);
 
-            if (user && user.comparePassword(confirmPassword)) {
+            if (authUser.role !== 'admin' && gig.sellerId !== authUser.id)
+                throw new ApiError(401, `You do not have permission to perform this action`);
+
+            if (user.comparePassword(confirmPassword)) {
                 await gig.destroy({ force: true });
-            } else {
-                throw new ApiError(406, 'Wrong password');
-            }
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // [DELETE] /api/v1/gigs/:gigSlug/admin-delete
-    async adminDeleteGig(id, gigSlug, formData) {
-        try {
-            const { adminPassword } = formData;
-            const admin = await User.findByPk(id, { attributes: ['id', 'password'] });
-
-            if (admin && admin.comparePassword(adminPassword)) {
-                const deleted = await Gig.destroy({ where: { slug: gigSlug }, force: true });
-                if (!deleted) throw new ApiError(404, `Gig with slug='${gigSlug}' was not found`);
             } else {
                 throw new ApiError(406, 'Wrong password');
             }

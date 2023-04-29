@@ -71,26 +71,13 @@ class GigsController {
         }
     }
 
-    // [DELETE] /api/v1/gigs/:gigSlug/delete
+    // [PUT] /api/v1/gigs/:gigSlug/admin-delete
     async deleteGig(req, res, next) {
         try {
-            const { id } = req.user;
+            const authUser = req.user;
             const formData = req.body;
             const { gigSlug } = req.params;
-            await gigsService.deleteGig(id, gigSlug, formData);
-            res.status(200).json(response('Gig deleted successfully'));
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    // [DELETE] /api/v1/gigs/:gigSlug/admin-delete
-    async adminDeleteGig(req, res, next) {
-        try {
-            const { id } = req.user;
-            const formData = req.body;
-            const { gigSlug } = req.params;
-            await gigsService.adminDeleteGig(id, gigSlug, formData);
+            await gigsService.deleteGig(authUser, gigSlug, formData);
             res.status(200).json(response('Gig has been removed'));
         } catch (err) {
             next(err);

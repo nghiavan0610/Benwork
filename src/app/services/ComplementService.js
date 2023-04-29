@@ -54,9 +54,9 @@ class ComplementService {
     }
 
     // [POST] /api/v1/complement/create
-    async createComplement(formData) {
+    async createComplement(type, formData) {
         try {
-            const { name, type } = formData;
+            const { name } = formData;
             const modelName = defineModel(type);
 
             const [complement, created] = await models[modelName].findOrCreate({
@@ -70,16 +70,16 @@ class ComplementService {
         }
     }
 
-    // [PUT] /api/v1/complement/edit
-    async editComplement(formData) {
+    // [PUT] /api/v1/complement/:typeSlug/edit
+    async editComplement(type, typeSlug, formData) {
         try {
-            const { typeId, name, type } = formData;
+            const { name } = formData;
             const modelName = defineModel(type);
 
-            const complement = await models[modelName].update({ name }, { where: { id: typeId } });
+            const complement = await models[modelName].update({ name }, { where: { slug: typeSlug } });
 
             if (!complement[0] && !complement[1][0]) {
-                throw new ApiError(404, `${modelName} '${typeId}' was not found`);
+                throw new ApiError(404, `${modelName} '${typeSlug}' was not found`);
             }
             return complement[1][0];
         } catch (err) {
@@ -90,17 +90,16 @@ class ComplementService {
         }
     }
 
-    // [DELETE] /api/v1/complement/delete
-    async deleteComplement(formData) {
+    // [DELETE] /api/v1/complement/:typeSlug/delete
+    async deleteComplement(type, typeSlug) {
         try {
-            const { typeId, type } = formData;
             const modelName = defineModel(type);
 
             const deleted = await models[modelName].destroy({
-                where: { id: typeId },
+                where: { slug: typeSlug },
                 force: true,
             });
-            if (!deleted) throw new ApiError(404, `${modelName} '${typeId}' was not found`);
+            if (!deleted) throw new ApiError(404, `${modelName} '${typeSlug}' was not found`);
         } catch (err) {
             throw err;
         }
