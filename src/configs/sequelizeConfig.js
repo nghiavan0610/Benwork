@@ -10,7 +10,7 @@ module.exports = {
         logging: console.log,
     },
     production: {
-        use_env_variable: config.DATABASE_URL,
+        use_env_variable: 'DATABASE_URL',
         dialect: 'mysql',
         dialectOptions: {
             ssl: {
@@ -18,4 +18,17 @@ module.exports = {
             },
         },
     },
+    // production: {
+    //     username: config.DB_USER,
+    //     password: config.DB_PASSWORD,
+    //     database: config.DB_NAME,
+    //     host: config.DB_HOST,
+    //     port: config.DB_LOCAL_PORT,
+    //     dialect: 'mysql',
+    //     dialectOptions: {
+    //         ssl: {
+    //             rejectUnauthorized: false,
+    //         },
+    //     },
+    // },
 };
