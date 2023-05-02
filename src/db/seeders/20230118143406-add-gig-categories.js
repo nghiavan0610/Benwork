@@ -1,5 +1,5 @@
 'use strict';
-const GigCategories = require('../mockData/gig_categories_mock_data');
+const GigCategories = require('../devData/GigCategories.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

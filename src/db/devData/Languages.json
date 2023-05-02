@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "name": "Vietnamese",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "vietnamese"
+  },
+  {
+    "id": 2,
+    "name": "Marathi",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "marathi"
+  },
+  {
+    "id": 3,
+    "name": "Norwegian",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "norwegian"
+  },
+  {
+    "id": 4,
+    "name": "Gagauz",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "gagauz"
+  },
+  {
+    "id": 5,
+    "name": "Zulu",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "zulu"
+  },
+  {
+    "id": 6,
+    "name": "Azeri",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "azeri"
+  },
+  {
+    "id": 7,
+    "name": "Catalan",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "catalan"
+  },
+  {
+    "id": 8,
+    "name": "English",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "english"
+  },
+  {
+    "id": 9,
+    "name": "Kannada",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "kannada"
+  },
+  {
+    "id": 10,
+    "name": "Japanese",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "japanese"
+  },
+  {
+    "id": 11,
+    "name": "Lithuanian",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "lithuanian"
+  },
+  {
+    "id": 12,
+    "name": "Estonian",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "estonian"
+  },
+  {
+    "id": 13,
+    "name": "Bulgarian",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "bulgarian"
+  },
+  {
+    "id": 14,
+    "name": "Telugu",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "telugu"
+  },
+  {
+    "id": 15,
+    "name": "Dari",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "dari"
+  },
+  {
+    "id": 16,
+    "name": "Lao",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "lao"
+  },
+  {
+    "id": 17,
+    "name": "Dutch",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "dutch"
+  },
+  {
+    "id": 18,
+    "name": "Bislama",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "bislama"
+  },
+  {
+    "id": 19,
+    "name": "Hiri Motu",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "hiri-motu"
+  },
+  {
+    "id": 20,
+    "name": "Kashmiri",
+    "createdAt": "2023-01-28 08:33:36",
+    "updatedAt": "2023-01-28 08:33:36",
+    "slug": "kashmiri"
+  }
+]

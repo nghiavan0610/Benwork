@@ -1,5 +1,5 @@
 'use strict';
-const Countries = require('../mockData/countries_mock_data');
+const Countries = require('../devData/Countries.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

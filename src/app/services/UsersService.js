@@ -32,7 +32,7 @@ class UsersService {
                     'name',
                     'avatarUrl',
                     'role',
-                    'member_since',
+                    'memberSince',
                     'slug',
                     [
                         sequelize.literal(
@@ -99,7 +99,7 @@ class UsersService {
                     'role',
                     'avatarUrl',
                     'role',
-                    'member_since',
+                    'memberSince',
                     'slug',
                     [
                         sequelize.literal(

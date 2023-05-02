@@ -89,7 +89,7 @@ class OrdersService {
                               'id',
                               'name',
                               'avatarUrl',
-                              'member_since',
+                              'memberSince',
                               'slug',
                               [
                                   sequelize.literal(

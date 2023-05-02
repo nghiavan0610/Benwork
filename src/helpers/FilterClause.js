@@ -105,7 +105,7 @@ const userFilterClause = (queryData) => {
         options.order.unshift([sequelize.literal('seller_selling_quantity'), 'DESC']);
     }
     if (searchFilter === 'old') {
-        options.order.unshift(['member_since', 'ASC']);
+        options.order.unshift(['memberSince', 'ASC']);
     }
 
     return options;

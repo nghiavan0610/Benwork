@@ -116,7 +116,7 @@ class ListsService {
                             'name',
                             'avatarUrl',
                             'slug',
-                            'member_since',
+                            'memberSince',
                             [
                                 sequelize.literal(
                                     `(select cast(avg(Reviews.rating) AS decimal (10, 2)) from Reviews where Reviews.tagId = CollectSellers.id and Reviews.tagType = "Seller")`,

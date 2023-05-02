@@ -24,7 +24,7 @@ module.exports = {
                         // allowNull: false,
                         type: Sequelize.STRING,
                     },
-                    member_since: {
+                    memberSince: {
                         allowNull: false,
                         type: Sequelize.DATE,
                     },

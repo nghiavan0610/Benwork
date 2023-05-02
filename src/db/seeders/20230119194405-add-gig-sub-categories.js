@@ -1,19 +1,19 @@
 'use strict';
-const GigCategories = require('../mockData/gig_categories_mock_data');
-const GigSubCategories = require('../mockData/gig_sub_categories_mock_data');
+const GigSubCategories = require('../devData/GigSubCategories.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        let GigCategoryID = [];
-        GigCategories.forEach((el) => {
-            GigCategoryID.push(el.id);
-        });
+        // let GigCategoryID = [];
+        // GigCategories.forEach((el) => {
+        //     GigCategoryID.push(el.id);
+        // });
 
-        const data = GigSubCategories.map((v) => ({
-            ...v,
-            gigCategoryId: GigCategoryID[(Math.random() * GigCategoryID.length) | 0],
-        }));
+        // const data = GigSubCategories.map((v) => ({
+        //     ...v,
+        //     gigCategoryId: GigCategoryID[(Math.random() * GigCategoryID.length) | 0],
+        // }));
+        const data = GigSubCategories;
         await queryInterface.bulkInsert('GigSubCategories', data, {});
     },
 

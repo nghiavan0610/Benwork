@@ -1,5 +1,5 @@
 'use strict';
-const AcademicTitles = require('../mockData/academic_titles_mock_data');
+const AcademicTitles = require('../devData/AcademicTitles.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

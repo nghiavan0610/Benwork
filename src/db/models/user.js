@@ -224,7 +224,7 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             timestamps: true,
-            createdAt: 'member_since',
+            createdAt: 'memberSince',
             paranoid: true,
             hooks: {
                 afterSave: (record) => {

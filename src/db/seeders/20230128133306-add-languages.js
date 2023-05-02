@@ -1,5 +1,5 @@
 'use strict';
-const Languages = require('../mockData/languages_mock_data');
+const Languages = require('../devData/Languages.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

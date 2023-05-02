@@ -1,5 +1,5 @@
 'use strict';
-const Majors = require('../mockData/majors_mock_data');
+const Majors = require('../devData/Majors.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

@@ -1,5 +1,5 @@
 'use strict';
-const Skills = require('../mockData/skills_mock_data');
+const Skills = require('../devData/Skills.json');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
