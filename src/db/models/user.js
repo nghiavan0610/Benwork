@@ -43,8 +43,6 @@ module.exports = (sequelize, DataTypes) => {
                 },
                 foreignKey: 'tagId',
                 constraints: false,
-                onDelete: 'CASCADE',
-                hooks: true,
             });
 
             User.hasMany(models.Review, {
@@ -249,5 +247,10 @@ module.exports = (sequelize, DataTypes) => {
         column: 'slug',
         bulkUpdate: true,
     });
+
+    User.afterDestroy(async (user, options) => {
+        await sequelize.models.Collection.destroy({ where: { tagId: user.id, tagType: 'Seller' } });
+    });
+
     return User;
 };

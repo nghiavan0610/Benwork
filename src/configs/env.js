@@ -12,6 +12,7 @@ const {
     DB_USER,
     DB_PASSWORD,
     DB_HOST,
+    DB_LOCAL_PORT,
     DB_DOCKER_PORT,
     DB_NAME,
     DB_DIALECT,
@@ -52,6 +53,7 @@ const config = {
     DB_PASSWORD,
     DB_HOST,
     DB_DOCKER_PORT,
+    DB_LOCAL_PORT,
     DB_NAME,
     DB_DIALECT,
 

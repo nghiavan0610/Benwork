@@ -12,24 +12,26 @@ module.exports = (sequelize, DataTypes) => {
                 through: {
                     model: models.Collection,
                     unique: false,
-                    scope: {
-                        tagType: 'Gig',
-                    },
+                    // scope: {
+                    //     tagType: 'Gig',
+                    // },
                 },
                 foreignKey: 'listId',
-                constraints: false,
+                onDelete: 'CASCADE',
+                hooks: true,
             });
             List.belongsToMany(models.User, {
                 as: 'CollectSellers',
+                foreignKey: 'listId',
                 through: {
                     model: models.Collection,
                     unique: false,
-                    scope: {
-                        tagType: 'Seller',
-                    },
+                    // scope: {
+                    //     tagType: 'Seller',
+                    // },
                 },
-                foreignKey: 'listId',
-                constraints: false,
+                onDelete: 'CASCADE',
+                hooks: true,
             });
         }
     }

@@ -1,26 +1,23 @@
 'use strict';
 const { Model } = require('sequelize');
 const { ValidationError } = require('../../helpers/ErrorHandler');
-
-const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
+const { options } = require('../../routes/v1');
 
 module.exports = (sequelize, DataTypes) => {
     class Collection extends Model {
-        static associate(models) {
-            Collection.belongsTo(models.List, { foreignKey: 'listId', constraints: false });
-            Collection.belongsTo(models.User, { foreignKey: 'tagId', constraints: false });
-            Collection.belongsTo(models.Gig, { foreignKey: 'tagId', constraints: false });
-        }
+        static associate(models) {}
     }
     Collection.init(
         {
-            id: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-            },
+            // id: {
+            //     type: DataTypes.INTEGER,
+            //     primaryKey: true,
+            //     autoIncrement: true,
+            // },
             listId: {
                 type: DataTypes.INTEGER,
+                primaryKey: true,
+                allowNull: false,
                 references: {
                     model: 'List',
                     key: 'id',
@@ -29,6 +26,8 @@ module.exports = (sequelize, DataTypes) => {
             tagId: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
+                primaryKey: true,
+                allowNull: false,
                 references: null,
             },
             tagType: {
@@ -45,14 +44,15 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Collection',
             timestamps: true,
-            indexes: [
-                {
-                    name: 'ix_collections',
-                    fields: ['tagId', 'tagType'],
-                    where: { tagType: 'Gig' || 'Seller' },
-                },
-            ],
+            // indexes: [
+            //     {
+            //         name: 'ix_collections',
+            //         fields: ['tagId', 'tagType'],
+            //         where: { tagType: 'Gig' || 'Seller' },
+            //     },
+            // ],
         },
     );
+
     return Collection;
 };

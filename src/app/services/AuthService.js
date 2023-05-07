@@ -11,7 +11,7 @@ class AuthService {
             const { email, password } = credentials;
             const user = await User.findOne({
                 attributes: {
-                    exclude: ['birthday', 'gender', 'countryId', 'about', 'phone', 'role', 'facebookId', 'googleId'],
+                    exclude: ['birthday', 'gender', 'countryId', 'about', 'phone', 'facebookId', 'googleId'],
                     include: ['password'],
                 },
                 where: { email },

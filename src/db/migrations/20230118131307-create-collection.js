@@ -7,29 +7,30 @@ module.exports = {
             await queryInterface.createTable(
                 'Collections',
                 {
-                    id: {
-                        allowNull: false,
-                        autoIncrement: true,
-                        primaryKey: true,
-                        type: Sequelize.INTEGER,
-                    },
+                    // id: {
+                    //     primaryKey: true,
+                    //     allowNull: false,
+                    //     autoIncrement: true,
+                    //     type: Sequelize.INTEGER,
+                    // },
                     listId: {
                         type: Sequelize.INTEGER,
+                        primaryKey: true,
+                        allowNull: false,
                         references: {
                             model: 'Lists',
                             key: 'id',
                         },
-                        constraints: false,
                         onDelete: 'CASCADE',
                         hooks: true,
                     },
                     tagId: {
                         type: Sequelize.UUID,
                         defaultValue: Sequelize.UUIDV4,
+                        primaryKey: true,
+                        allowNull: false,
                         references: null,
                         constraints: false,
-                        onDelete: 'CASCADE',
-                        hooks: true,
                     },
                     tagType: {
                         type: Sequelize.ENUM('Gig', 'Seller'),
@@ -43,12 +44,6 @@ module.exports = {
                         type: Sequelize.DATE,
                     },
                 },
-                { transaction },
-            );
-            await queryInterface.addIndex(
-                'Collections',
-                ['tagId', 'tagType'],
-                { name: 'ix_collections', where: { tagType: 'Gig' || 'Seller' } },
                 { transaction },
             );
             await transaction.commit();

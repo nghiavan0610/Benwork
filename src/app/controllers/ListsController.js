@@ -68,8 +68,8 @@ class ListsController {
             const { id } = req.user;
             const formData = req.body;
             const { listId } = req.params;
-            const savedItem = await listsService.saveItemToList(id, listId, formData);
-            res.status(201).json(response({ [formData.tagType]: savedItem }));
+            const collection = await listsService.saveItemToList(id, listId, formData);
+            res.status(201).json(response({ collection }));
         } catch (err) {
             next(err);
         }

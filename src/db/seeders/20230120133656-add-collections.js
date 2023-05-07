@@ -16,7 +16,7 @@ module.exports = {
         for (let i = 0; i < 100; i++) {
             if (i < 60) {
                 data.push({
-                    id: i + 1,
+                    // id: i + 1,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     listId: ListID[(Math.random() * ListID.length) | 0].id,
@@ -25,7 +25,7 @@ module.exports = {
                 });
             } else {
                 data.push({
-                    id: i + 1,
+                    // id: i + 1,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     listId: ListID[(Math.random() * ListID.length) | 0].id,

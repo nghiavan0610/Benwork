@@ -1,5 +1,5 @@
 const { ApiError } = require('../../helpers/ErrorHandler');
-const { sequelize, User, Gig, List, Country } = require('../../db/models');
+const { sequelize, User, Gig, List, Country, Collection } = require('../../db/models');
 
 class ListsService {
     // [GET] /api/v1/lists

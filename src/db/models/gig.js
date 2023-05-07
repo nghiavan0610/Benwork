@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
                 hooks: true,
             });
             Gig.belongsToMany(models.List, {
-                as: 'GigsIsCollectedBy',
                 through: {
                     model: models.Collection,
                     unique: false,
@@ -24,10 +23,9 @@ module.exports = (sequelize, DataTypes) => {
                         tagType: 'Gig',
                     },
                 },
+                as: 'GigsIsCollectedBy',
                 foreignKey: 'tagId',
                 constraints: false,
-                onDelete: 'CASCADE',
-                hooks: true,
             });
 
             Gig.hasMany(models.Review, {
@@ -140,6 +138,10 @@ module.exports = (sequelize, DataTypes) => {
         overwrite: true,
         column: 'slug',
         bulkUpdate: true,
+    });
+
+    Gig.afterDestroy(async (gig, options) => {
+        await sequelize.models.Collection.destroy({ where: { tagId: gig.id, tagType: 'Gig' } });
     });
 
     return Gig;

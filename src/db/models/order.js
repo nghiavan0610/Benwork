@@ -6,14 +6,10 @@ module.exports = (sequelize, DataTypes) => {
             Order.belongsTo(models.User, {
                 as: 'OrderOwner',
                 foreignKey: 'userId',
-                // onDelete: 'RESTRICT',
-                // hooks: true,
             });
             Order.belongsTo(models.Gig, {
                 as: 'GigIsOrdered',
                 foreignKey: 'gigId',
-                // onDelete: 'RESTRICT',
-                // hooks: true,
             });
         }
     }
