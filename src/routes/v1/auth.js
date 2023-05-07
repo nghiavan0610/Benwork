@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-
 const { authenticateToken } = require('../../middlewares/AuthMiddleware');
-
 const authController = require('../../app/controllers/AuthController');
 
 router.post('/signin', authController.signin);
@@ -16,16 +14,20 @@ router.get('/signout', authenticateToken, authController.signout);
 router.get('/facebook/signin', passport.authenticate('facebook', { authType: 'reauthenticate' }));
 router.get(
     '/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/api/auth/signin' }),
+    passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/signin' }),
     (req, res) => {
-        res.redirect('/api/auth/account');
+        res.redirect(`/api/v1/users/${req.user.slug}`);
     },
 );
 
 // google routes
 router.get('/google/signin', passport.authenticate('google', { authType: 'reauthenticate', scope: ['profile'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/api/auth/signin' }), (req, res) => {
-    res.redirect('/api/auth/account');
-});
+router.get(
+    '/google/callback',
+    passport.authenticate('google', { failureRedirect: '/api/v1/auth/signin' }),
+    (req, res) => {
+        res.redirect(`/api/v1/users/${req.user.slug}`);
+    },
+);
 
 module.exports = router;

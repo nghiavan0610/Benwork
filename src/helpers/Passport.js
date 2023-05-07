@@ -1,30 +1,32 @@
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+// const JwtStrategy = require('passport-jwt').Strategy;
+// const ExtractJwt = require('passport-jwt').ExtractJwt;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../helpers/Token');
+const redisClient = require('../configs/init.redis');
 
-const config = require('../config/env');
+const config = require('../configs/env');
 const { User } = require('../db/models');
 
 // JWT Authentication
-const jwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: config.JWT_SECRET,
-};
+// const jwtOptions = {
+//     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+//     secretOrKey: config.JWT_SECRET,
+// };
 
-const jwtLogin = new JwtStrategy(jwtOptions, async (payload, next) => {
-    try {
-        const user = await User.findByPk(payload.id);
-        if (user) {
-            return next(null, { user, jti: payload.jti });
-        } else {
-            return next(null, false);
-        }
-    } catch (err) {
-        next(err);
-    }
-});
+// const jwtLogin = new JwtStrategy(jwtOptions, async (payload, next) => {
+//     try {
+//         const user = await User.findByPk(payload.id);
+//         if (user) {
+//             return next(null, { user, jti: payload.jti });
+//         } else {
+//             return next(null, false);
+//         }
+//     } catch (err) {
+//         next(err);
+//     }
+// });
 
 // Facebook Authentication
 const fbOptions = {
@@ -40,6 +42,7 @@ const fbLogin = new FacebookStrategy(fbOptions, async (accessToken, refreshToken
                 name: profile.displayName,
             },
         });
+
         return cb(null, user);
     } catch (err) {
         cb(err);
@@ -67,7 +70,7 @@ const ggLogin = new GoogleStrategy(ggOptions, async (accessToken, refreshToken, 
     }
 });
 
-passport.use(jwtLogin);
+// passport.use(jwtLogin);
 passport.use(fbLogin);
 passport.use(ggLogin);
 
