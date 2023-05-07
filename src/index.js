@@ -5,11 +5,9 @@ const morgan = require('morgan');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const route = require('./routes');
-const session = require('express-session');
+const session = require('cookie-session');
 const passport = require('passport');
 const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const yaml = require('yamljs');
 
 app.use(cors());
 
@@ -39,10 +37,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-// swagger
-const openapiDocument = yaml.load('./openapi.yaml');
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(openapiDocument));
 
 // Route init
 route(app);
