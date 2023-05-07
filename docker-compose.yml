@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+    mysql:
+        image: mysql:8.0
+        container_name: fiverr-mysql
+        restart: unless-stopped
+        env_file:
+            - ./.env
+        ports:
+            - $DB_LOCAL_PORT:$DB_DOCKER_PORT
+        environment:
+            MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+            MYSQL_DATABASE: $DB_NAME
+            MYSQL_USER: $DB_USER
+            MYSQL_PASSWORD: $DB_PASSWORD
+        command:
+            [
+                mysqld,
+                --authentication-policy=mysql_native_password,
+                --character-set-server=utf8mb4,
+                --collation-server=utf8mb4_unicode_ci,
+                --innodb_monitor_enable=all,
+                --max-connections=1001,
+            ]
+        healthcheck:
+            test: 'exit 0'
+        volumes:
+            - ./mysqldata:/data/db
+        networks:
+            - fiverr-networks
+
+    redis:
+        image: redis:7
+        container_name: fiverr-redis
+        restart: unless-stopped
+        env_file:
+            - ./.env
+        ports:
+            - $REDIS_LOCAL_PORT:$REDIS_DOCKER_PORT
+        networks:
+            - fiverr-networks
+
+    fiverr-api:
+        container_name: fiverr-api
+        image: benacio/fiverr-api:latest-amd64
+        restart: unless-stopped
+        env_file:
+            - ./.env
+        environment:
+            DATABASE_URL: 'mysql://${DB_USER}:${DB_PASSWORD}@mysql/${DB_NAME}'
+            REDIS_HOST: 'redis'
+        ports:
+            - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_started
+        volumes:
+            - ./files:/app/files
+        networks:
+            - fiverr-networks
+        command: sh -c 'yarn run migrate:up && yarn run seed:up && yarn start'
+
+    nginx:
+        container_name: fiverr-nginx
+        image: nginx
+        restart: unless-stopped
+        env_file:
+            - ./.env
+        volumes:
+            - ./files:/files
+        ports:
+            - $NGINX_LOCAL_PORT:$NGINX_DOCKER_PORT
+        networks:
+            - fiverr-networks
+        depends_on:
+            - fiverr-api
+        command: sh -c "nginx -g 'daemon off;'"
+
+networks:
+    fiverr-networks:
