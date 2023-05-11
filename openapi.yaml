@@ -51,11 +51,11 @@ paths:
             deprecated: false
             security:
                 - refreshBearer: []
-    /api/auth/facebook/signin:
+    /auth/facebook/signin:
         get:
             tags:
                 - auth
-            summary: Facebook Sign In
+            summary: Facebook Signin {Copy Request URL to your site for testing}
             operationId: FacebookSignIn
             parameters: []
             responses:
@@ -64,11 +64,11 @@ paths:
                     headers: {}
             deprecated: false
             security: []
-    /api/auth/google/signin:
+    /auth/google/signin:
         get:
             tags:
                 - auth
-            summary: Google Sign In
+            summary: Google Signin {Copy Request URL to your site for testing}
             operationId: GoogleSignIn
             parameters: []
             responses:
