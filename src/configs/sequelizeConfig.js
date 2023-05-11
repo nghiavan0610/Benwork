@@ -18,17 +18,4 @@ module.exports = {
             },
         },
     },
-    // production: {
-    //     username: config.DB_USER,
-    //     password: config.DB_PASSWORD,
-    //     database: config.DB_NAME,
-    //     host: config.DB_HOST,
-    //     port: config.DB_LOCAL_PORT,
-    //     dialect: 'mysql',
-    //     dialectOptions: {
-    //         ssl: {
-    //             rejectUnauthorized: false,
-    //         },
-    //     },
-    // },
 };
