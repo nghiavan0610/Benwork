@@ -41,6 +41,6 @@ app.use(passport.session());
 // Route init
 route(app);
 
-app.listen(config.NODE_DOCKER_PORT || 3000, () => {
-    console.log(`App listening on port ${config.NODE_DOCKER_PORT || 3000}`);
+app.listen(config.NODE_DOCKER_PORT || 8031, () => {
+    console.log(`App listening on port ${config.NODE_DOCKER_PORT || 8031}`);
 });
