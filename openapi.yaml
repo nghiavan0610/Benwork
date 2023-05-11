@@ -8,7 +8,7 @@ info:
         email: nghiavan0610@gmail.com
     version: '1.0'
 servers:
-    - url: 'https://testhungnguyen.site/api/v1'
+    - url: 'https://fiverr.cyclic.app/api/v1'
 paths:
     /auth/signin:
         post:
