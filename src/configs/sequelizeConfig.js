@@ -17,5 +17,10 @@ module.exports = {
                 rejectUnauthorized: false,
             },
         },
+        pool: {
+            max: 5,
+            min: 0,
+            idle: 10000,
+        },
     },
 };
