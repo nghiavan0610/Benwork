@@ -434,9 +434,9 @@ class UsersService {
 
                         if (!deleted) throw new ApiError(404, `User with slug='${userSlug}' was not found`);
 
-                        await cloudinary.api.delete_resources_by_prefix(`fiverr/${userSlug}/`, async (err, result) => {
+                        await cloudinary.api.delete_resources_by_prefix(`benwork/${userSlug}/`, async (err, result) => {
                             if (Object.keys(result.deleted).length > 0) {
-                                await cloudinary.api.delete_folder(`fiverr/${userSlug}`);
+                                await cloudinary.api.delete_folder(`benwork/${userSlug}`);
                             }
                         });
                         break;

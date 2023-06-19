@@ -2,13 +2,13 @@ version: '3.8'
 services:
     mysql:
         image: mysql:8.0
-        container_name: fiverr-mysql-dev
+        container_name: benwork-mysql-dev
         restart: unless-stopped
         ports:
             - '3306:3306'
         environment:
             MYSQL_ROOT_PASSWORD: 'nghia1234'
-            MYSQL_DATABASE: 'fiverr_db_dev'
+            MYSQL_DATABASE: 'benwork_db_dev'
             MYSQL_USER: 'nghia'
             MYSQL_PASSWORD: 'nghia1234'
         command:
@@ -25,7 +25,7 @@ services:
 
     redis:
         image: redis:7
-        container_name: fiverr-redis-dev
+        container_name: benwork-redis-dev
         restart: unless-stopped
         ports:
             - '6379:6379'

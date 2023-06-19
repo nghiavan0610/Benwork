@@ -2,7 +2,7 @@ version: '3.8'
 services:
     mysql:
         image: benacio/mysql-lowmemory:latest-amd64
-        container_name: fiverr-mysql
+        container_name: benwork-mysql
         restart: unless-stopped
         env_file:
             - ./.env
@@ -32,22 +32,22 @@ services:
                     cpus: '0.50'
                     memory: 1024M
         networks:
-            - fiverr-networks
+            - benwork-networks
 
     redis:
         image: redis:7
-        container_name: fiverr-redis
+        container_name: benwork-redis
         restart: unless-stopped
         env_file:
             - ./.env
         ports:
             - $REDIS_LOCAL_PORT:$REDIS_DOCKER_PORT
         networks:
-            - fiverr-networks
+            - benwork-networks
 
-    fiverr-api:
-        container_name: fiverr-api
-        image: benacio/fiverr-api:latest-amd64
+    benwork-api:
+        container_name: benwork-api
+        image: benacio/benwork-api:latest-amd64
         restart: unless-stopped
         env_file:
             - ./.env
@@ -65,11 +65,11 @@ services:
         volumes:
             - ./files:/app/files
         networks:
-            - fiverr-networks
+            - benwork-networks
         command: sh -c 'yarn run migrate:up && yarn run seed:up && yarn start'
 
     nginx:
-        container_name: fiverr-nginx
+        container_name: benwork-nginx
         image: nginx
         restart: unless-stopped
         env_file:
@@ -79,10 +79,10 @@ services:
         ports:
             - $NGINX_LOCAL_PORT:$NGINX_DOCKER_PORT
         networks:
-            - fiverr-networks
+            - benwork-networks
         depends_on:
-            - fiverr-api
+            - benwork-api
         command: sh -c "nginx -g 'daemon off;'"
 
 networks:
-    fiverr-networks:
+    benwork-networks:

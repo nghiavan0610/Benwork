@@ -13,7 +13,7 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: (req, file) => {
-            return `fiverr/${req.user.slug}`;
+            return `benwork/${req.user.slug}`;
         },
         public_id: (req, file) => {
             const prefix = Date.now() + '-' + Math.round(Math.random() * 1e9);

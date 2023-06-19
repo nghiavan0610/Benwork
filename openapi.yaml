@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
-    title: Fiverr API
-    description: 'Fiverr API documentation - created by Nghia Van'
+    title: Benwork API
+    description: 'Benwork API documentation - created by Nghia Van'
     contact:
         name: Nghia Van
         url: https://github.com/nghiavan0610
         email: nghiavan0610@gmail.com
     version: '1.0'
 servers:
-    - url: 'https://fiverr.cyclic.app/api/v1'
+    - url: 'https://benwork.cyclic.app/api/v1'
 paths:
     /auth/signin:
         post:

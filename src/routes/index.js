@@ -8,7 +8,7 @@ const route = (app) => {
     app.get('/api', (req, res, next) => {
         return res.status(200).json({
             status: 'success',
-            message: 'Welcome to Fiverr API - created by Nghia Van',
+            message: 'Welcome to Benwork API - created by Nghia Van',
         });
     });
     app.use('/api/v1', v1Router);
