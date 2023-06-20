@@ -4,8 +4,8 @@ info:
     description: 'Benwork API documentation - created by Nghia Van'
     contact:
         name: Nghia Van
-        url: https://github.com/nghiavan0610
-        email: nghiavan0610@gmail.com
+        url: https://benisme.netlify.app/
+        email: nghiavan.dev@gmail.com
     version: '1.0'
 servers:
     - url: 'https://benwork.cyclic.app/api/v1'
